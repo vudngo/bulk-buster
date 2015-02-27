@@ -1,42 +1,75 @@
-<center>
-  <h1>Add a Campaign Bulk</h1>
+<div class="main--pos">
+  <h1>Advertiser Campaign Creation</h1>
+</div>
 
+    <%= form_for(@campaign_bulk_buster, :html => {:multipart => true}) do |f|%>
+        <% if @campaign_bulk_buster.errors.any? %>
+            <h2>Errors:</h2>
+            <ul>
+              <%= @campaign_bulk_buster.errors.full_messages.each do |message| %>
+                  <li> <%=  puts message.first %> </li>
+              <% end %>
+            </ul>
+        <% end %>
 
-  <%= form_for(@campaign_bulk_buster, :html => {:multipart => true}) do |f|%>
-      <% if @campaign_bulk_buster.errors.any? %>
-          <h2>Errors:</h2>
-          <ul>
-            <%= @campaign_bulk_buster.errors.full_messages.each do |message| %>
-                <li> <%=  puts message.first %> </li>
-            <% end %>
-          </ul>
-      <% end %>
-      <p>
-        <%= f.label :network_id, 'Network ID' %> <br />
-        <%= f.text_field :network_id %>
-      </p>
-      <p>
-        <%= label_tag :api_token, 'API Token' %> <br />
-        <%= text_field_tag :api_token %>
-      </p>
-      <p>
-        <%= f.label :advertiser_id_from_network_to_clone, 'Advertiser ID To Clone' %> <br />
-        <%= f.text_field :advertiser_id_from_network_to_clone %>
-      </p>
-      <p>
-        <%= f.label :campaign_id_from_network_to_clone, 'Campaign ID To Clone' %> <br />
-        <%= f.text_field :campaign_id_from_network_to_clone %>
-      </p>
-      <p>
-        <%= f.label :task_description, 'Task Description' %> <br />
-        <%= f.text_area :task_description %>
-      </p>
-      <p>
-        <%= label_tag :attachment, 'Input File' %> <br />
-        <%= file_field_tag :attachment %>
-      </p>
-      <p>
-        <%= f.submit "Bust!" %>
-      </p>
-  <% end %>
-</center>
+        <section class="main--pos">
+          <div class="title--header">
+            Credentials
+          </div>
+
+          <div class="inner">
+            <div class="tile">
+              <%= f.label :network_id, 'Network ID' %> <br />
+              <%= f.text_field :network_id %>
+            </div>
+    
+            <div class="tile">
+              <%= label_tag :api_token, 'API Token' %> <br />
+              <%= text_field_tag :api_token %>
+            </div>
+          </div>
+        </section>
+
+<!--
+        <div class="tile">
+          <%= f.label :advertiser_id_from_network_to_clone, 'Advertiser ID To Clone' %> <br />
+          <%= f.text_field :advertiser_id_from_network_to_clone %>
+        </div>
+-->
+
+        <section class="main--pos">
+          <div class="title--header">
+            Request Details
+          </div>
+          <div class="inner">
+            <div class="tile">
+              <%= f.label :campaign_id_from_network_to_clone, 'Campaign Id (From Network) To Clone' %> <br />
+              <%= f.text_field :campaign_id_from_network_to_clone %>
+            </div>
+    
+            <div class="tile">
+              <%= f.label :task_description, 'Task Description' %> <br />
+              <%= f.text_area :task_description %>
+            </div>
+          </div>
+        </section>
+
+        <section class="main--pos">
+          <div class="title--header">
+            Finalize
+          </div>
+
+          <div class="inner">
+            <div class="tile">
+              <%= label_tag :attachment, 'Input File' %> <br />
+              <%= file_field_tag :attachment %>
+            </div>
+    
+            <div class="tile">
+              <input type="submit" class="btn btn-simple-dark" name="commit" value="Bust!">
+            </div>
+          </div>
+        </section>
+
+    <% end %>
+
