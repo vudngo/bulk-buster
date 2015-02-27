@@ -1,0 +1,16 @@
+<center>
+  <h1>Campaign Bulk Buster</h1>
+  ************************************************************************
+
+  <% @campaign_bulk_busters.each do |campaign_bulk_buster| %>-->
+      <%= link_to campaign_bulk_buster.task_description,  campaign_bulk_buster %> |
+      <%= link_to "edit", edit_campaign_bulk_buster_path(campaign_bulk_buster) %> |
+      <%= link_to "delete", campaign_bulk_buster, :confirm => "Are You Sure?", :method => :delete %>
+
+  <% end %>
+
+  <br>
+  <br>
+
+  <p><%= link_to "Add a Campaign Bulk to Bust", new_campaign_bulk_buster_path %></p>
+</center>

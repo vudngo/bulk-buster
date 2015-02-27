@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  network_id: 1
+  api_token: MyString
+  ivr_tree: MyText
+
+two:
+  network_id: 1
+  api_token: MyString
+  ivr_tree: MyText

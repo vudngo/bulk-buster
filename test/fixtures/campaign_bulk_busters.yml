@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  task_description: MyString
+  network_id: MyString
+  input_filename: MyString
+  percent_completed: 
+
+two:
+  task_description: MyString
+  network_id: MyString
+  input_filename: MyString
+  percent_completed: 

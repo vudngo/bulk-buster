@@ -1,0 +1,20 @@
+
+<center>
+  <h1>Affiliate Campaign Bulk Buster</h1>
+  ************************************************************************
+
+  <% @affiliate_campaign_bulk_busters.each do |affiliate_campaign_bulk_buster| %>
+      <br>
+      <%= link_to affiliate_campaign_bulk_buster.task_description,  affiliate_campaign_bulk_buster %> |
+      <%= link_to "edit", edit_affiliate_campaign_bulk_buster_path(affiliate_campaign_bulk_buster) %> |
+      <%= link_to "delete", affiliate_campaign_bulk_buster, :confirm => "Are You Sure?", :method => :delete %>
+      <br>
+
+  <% end %>
+
+
+  <br>
+  <br>
+
+  <p><%= link_to "Add a affiliate_campaign Bulk to Bust", new_affiliate_campaign_bulk_buster_path %></p>
+</center>

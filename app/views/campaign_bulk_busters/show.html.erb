@@ -1,0 +1,32 @@
+<h1>Add a Advertiser Bulk</h1>
+
+
+<%= form_for(@advertiser_bulk, :html => {:multipart => true}) do |f|%>
+    <% if @advertiser_bulk.errors.any? %>
+        <h2>Errors:</h2>
+        <ul>
+          <%= @advertiser_bulk.errors.full_messages.each do |message| %>
+              <li> <%=  puts message.first %> </li>
+          <% end %>
+        </ul>
+    <% end %>
+    <p>
+      <%= f.label :network_id, 'Network ID' %> <br />
+      <%= f.text_field :network_id %>
+    </p>
+    <p>
+      <%= f.label :api_token, 'API Token' %> <br />
+      <%= f.text_field :api_token %>
+    </p>
+    <p>
+      <%= f.label :task_description, 'Task Description' %> <br />
+      <%= f.text_area :task_description %>
+    </p>
+    <p>
+      <%= label_tag :attachment, 'Input File' %> <br />
+      <%= file_field_tag :attachment %>
+    </p>
+    <p>
+      <%= f.submit "Bust!" %>
+    </p>
+<% end %>

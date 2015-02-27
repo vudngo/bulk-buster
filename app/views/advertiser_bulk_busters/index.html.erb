@@ -1,0 +1,20 @@
+
+<center>
+<h1>Advertiser Bulk Buster</h1>
+  ************************************************************************
+
+  <% @advertiser_bulk_busters.each do |advertiser_bulk_buster| %>
+      <br>
+      <%= link_to advertiser_bulk_buster.task_description,  advertiser_bulk_buster %> |
+      <%= link_to "edit", edit_advertiser_bulk_buster_path(advertiser_bulk_buster) %> |
+      <%= link_to "delete", advertiser_bulk_buster, :confirm => "Are You Sure?", :method => :delete %>
+      <br>
+
+<% end %>
+
+
+<br>
+<br>
+
+<p><%= link_to "Add a Advertiser Bulk to Bust", new_advertiser_bulk_buster_path %></p>
+</center>
