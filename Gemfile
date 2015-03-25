@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
+#gem 'rails', '3.2.21', :github => 'Invoca/rails', :branch => 'invoca-3.2.21'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 # Use SCSS for stylesheets
@@ -29,8 +30,14 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Unicorn as the app server
 # gem 'unicorn'
 
+gem 'delayed_job'
+gem 'delayed_job_active_record'
+
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+
+
 gem 'paperclip',             '2.7.2'
 
 group :development, :test do

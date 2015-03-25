@@ -1,32 +1,33 @@
-<h1>Add a Advertiser Bulk</h1>
+<br/><br/>
+<div class="main--pos">
+  <h1><%= puts "#{@campaign_bulk_buster.task_description.upcase} Results" %></h1>
+</div>
 
 
-<%= form_for(@advertiser_bulk, :html => {:multipart => true}) do |f|%>
-    <% if @advertiser_bulk.errors.any? %>
-        <h2>Errors:</h2>
-        <ul>
-          <%= @advertiser_bulk.errors.full_messages.each do |message| %>
-              <li> <%=  puts message.first %> </li>
-          <% end %>
-        </ul>
-    <% end %>
-    <p>
-      <%= f.label :network_id, 'Network ID' %> <br />
-      <%= f.text_field :network_id %>
-    </p>
-    <p>
-      <%= f.label :api_token, 'API Token' %> <br />
-      <%= f.text_field :api_token %>
-    </p>
-    <p>
-      <%= f.label :task_description, 'Task Description' %> <br />
-      <%= f.text_area :task_description %>
-    </p>
-    <p>
-      <%= label_tag :attachment, 'Input File' %> <br />
-      <%= file_field_tag :attachment %>
-    </p>
-    <p>
-      <%= f.submit "Bust!" %>
-    </p>
-<% end %>
+ <%= form_for(@campaign_bulk_buster, :html => {:multipart => true}) do |f|%>
+    <section class="main--pos">
+      <div class="title--header">
+       STATS FOR  <%= "#{@campaign_bulk_buster.task_description}"%>
+        <div style="font-size: 100%;">
+          <%= link_to "Input File", "/uploads/campaign_bulk_#{@campaign_bulk_buster.id}.csv" %> |
+          <%= link_to "Results", "/output/campaign_bulk_output_#{@campaign_bulk_buster.id}.csv" %>
+        </div>
+      </div>
+      <div class="hulk_background">
+        <div class="tile">
+          <div class="inner">
+          <p>
+            <%= f.label :success_count, "Campaigns Created Successfully: " %> <span class="success_color"> <%= "#{@success_count}" %> </span> <br/>
+           </p>
+            <p>
+              <%= f.label :failure_count, "Campaigns Failed to be Created: " %> <span class="failure_color"> <%= "#{@failure_count}" %> </span> <br/>
+            </p>
+            <p>
+              <%= f.label :failure_count, "Total Run Time: " %> <span class="success_color"> <%= "#{@campaign_bulk_buster.total_run_time}" %> </span> <br/>
+            </p>
+            <br/>
+            </div>
+        </div>
+      </div>
+    </section>
+  <% end %>

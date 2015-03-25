@@ -6,6 +6,13 @@ class CampaignBulkBustersController < ApplicationController
 
   def show
     @campaign_bulk_buster = CampaignBulkBuster.find(params[:id])
+    filename = "campaign_bulk_output_#{@campaign_bulk_buster.id}.csv"
+    output_hash = @campaign_bulk_buster.parse_output_file(filename)
+    @result_hash = @campaign_bulk_buster.get_results(output_hash)
+    @success_count = @result_hash["201"]
+    @failure_count = output_hash.count -  @success_count
+    puts "failure count #{@failure_count}"
+    puts "\n\n\n"
   end
 
   def new
@@ -28,7 +35,7 @@ class CampaignBulkBustersController < ApplicationController
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @campaign_bulk_buster.input_filename), 'wb') do |file|
         file.write(uploaded_io.read)
       end
-      @campaign_bulk_buster.bust(params[:api_token])
+      @campaign_bulk_buster.delay.bust(params[:api_token])
     else
       render "new"
     end
@@ -56,9 +63,15 @@ class CampaignBulkBustersController < ApplicationController
   end
 
 
+  def download
+    send_file "#{RAILS_ROOT}/#{params[:file_name]}"
+  end
+
   private
   def post_params
     allow = [:network_id, :task_description, :input_filename, :advertiser_id_from_network_to_clone, :campaign_id_from_network_to_clone]
     params.require(:campaign_bulk_buster).permit(allow)
   end
+
+
 end

@@ -1,3 +1,29 @@
 // Place all the styles related to the advertiser_bulks controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+
+h1 {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 55px;
+  margin-top: 0;
+  color: #e6e6e6;
+}
+
+
+img#buster {
+  padding: 10;
+  opacity: 0.35;
+  filter: alpha(opacity=0); /* For IE8 and earlier */
+}
+
+div#buster {
+  width:85%;
+  height:300px;
+  border:1px solid gray;
+  padding:8px;
+  background:#e1efbb url('/assets/images/BulkBuster.png') no-repeat bottom right;
+}

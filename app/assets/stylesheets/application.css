@@ -30,10 +30,11 @@ h1 {
   text-align: center;
 }
 
+
 /* Global Positision Classes */
 
 .main--pos{
-  width: 640px;
+  width: 700px;
   margin: 0 auto;
 }
 
@@ -46,13 +47,12 @@ section {
 }
 
 .inner {
-  padding: 25px;
+    padding: 25px;
 }
 
 
 
 /* Tiles */
-
 .title--header {
   background-color: #040404;
   color: #fff;
@@ -60,7 +60,34 @@ section {
   text-transform: uppercase;
   padding: 10px;
   font-weight: 400;
+  box-shadow: 4px 2px 4px #888888;
 }
+
+.error--header {
+    background-color: #901015;
+    color: #daaa24;
+    border-color: #c29323;
+    text-transform: uppercase;
+    padding: 10px;
+    font-weight: 400;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 3px 2px #040404;
+    font-weight: bolder;
+    text-align: center;
+}
+
+
+.stat--header {
+    background-size: 50% auto;
+    background-color: #040404;
+    color: #fff;
+    border-color: #383636;
+    padding: 10px;
+    font-weight: 400;
+
+}
+
 
 .tile {
   display: inline-block;
@@ -74,7 +101,7 @@ section {
   padding: 5px;
   border-radius: 3px;
   box-shadow: 1px 1px 9px -4px inset;
-  font-size: +16px;
+  font-size: 16px;
 }
 
 .tile label {
@@ -110,12 +137,37 @@ section {
 }
 
 .btn-simple-dark {
-  background-color: #5f5c5c;
-  color: #ccc;
+  background-color: #317018;
+  color: #FFFFFF;
   border-width: 0;
   line-height: 20px;
   font-weight: 300;
   min-width: 100px;
   height: 100px !important;
   box-shadow: none !important;
+    font-weight: bolder;
 }
+
+a:link {color: #5ba51f;font-weight: bolder;}
+a:visited {color:#5ba51f;font-weight: bolder;}
+a:hover {color:#5ba51f;font-weight: bolder;}
+
+
+.bulk_tracker {
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 8px;
+    border: 1px solid white;
+}
+
+th, td {
+    padding: 8px;
+    border: 1px solid white;
+}
+
+.stats{
+    border-collapse: collapse;
+    padding: 8px;}
+

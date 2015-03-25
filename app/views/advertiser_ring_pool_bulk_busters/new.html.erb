@@ -1,0 +1,59 @@
+<div class="main--pos">
+  <h1>Add a Advertiser Ring Pool Bulk</h1>
+</div>
+
+<%= form_for(@advertiser_ring_pool_bulk_buster, :html => {:multipart => true}) do |f|%>
+    <% if @advertiser_ring_pool_bulk_buster.errors.any? %>
+        <h2>Errors:</h2>
+        <ul>
+          <%= @advertiser_ring_pool_bulk_buster.errors.full_messages.each do |message| %>
+              <li> <%=  puts message.first %> </li>
+          <% end %>
+        </ul>
+    <% end %>
+    <section class="main--pos">
+      <div class="stat--header">
+        Credentials
+      </div>
+
+      <div class="inner">
+        <div class="tile">
+          <p>
+            <%= f.label :network_id, 'Network ID' %> <br />
+            <%= f.text_field :network_id %>
+          </p>
+        </div>
+        <div class="tile">
+          <p>
+            <%= label_tag :api_token, 'API Token' %> <br />
+            <%= text_field_tag :api_token %>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="main--pos">
+      <div class="title--header">
+        Finalize
+      </div>
+
+      <div class="inner">
+        <div class="tile">
+          <p>
+            <%= f.label :task_description, 'Task Description' %> <br />
+            <%= f.text_area :task_description %>
+          </p>
+        </div>
+
+        <div class="tile">
+          <p>
+            <%= label_tag :attachment, 'Input File' %> <br />
+            <%= file_field_tag :attachment %>
+          </p>
+          <p>
+            <%= f.submit "Bust!" %>
+          </p>
+        </div>
+      </div>
+    </section>
+<% end %>

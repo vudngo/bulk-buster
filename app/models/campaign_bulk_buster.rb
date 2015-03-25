@@ -3,6 +3,7 @@ class CampaignBulkBuster < Buster
   validates   :input_filename, :uniqueness => true
 
   def bust(api_token)
+    t = Time.now
     if  advertiser_id_from_network_to_clone.empty? || campaign_id_from_network_to_clone.empty?
         #puts "\n\nHAS NO CAMPAIGN ID: #{self.campaign_id_from_network_to_clone}\n\n"
       bust_by_input_file(api_token)
@@ -10,6 +11,8 @@ class CampaignBulkBuster < Buster
       #puts "\n\nHAS CAMPAIGN ID: #{self.campaign_id_from_network_to_clone}\n\n"
       bust_by_cloning(api_token)
     end
+    self.total_run_time =  Time.at(Time.now - t).utc.strftime("%H:%M:%S")
+    self.save
   end
 
   def bust_by_input_file(api_token)

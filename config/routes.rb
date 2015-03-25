@@ -14,8 +14,13 @@ Rails.application.routes.draw do
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
   resources :advertiser_bulk_busters
+  resources :advertiser_ring_pool_bulk_busters
   resources :campaign_bulk_busters
   resources :affiliate_campaign_bulk_busters
+  resources :bulk_trackers
+
+
+
   #  resources :campaign_bulk_busters, :path => '/campaign_bulk_busters'
   # Example resource route with options:
   #   resources :products do

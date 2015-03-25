@@ -1,0 +1,68 @@
+<center>
+  <h1 class="hulk_header">Bulk Tracker</h1>
+  <div class="stat--header">
+      <table style="width:80%; border: 1px solid white; border-collapse: collapse;">
+        <tr>
+          <th></th>
+          <th>Advertisers</th>
+          <th>Advertiser Campaigns</th>
+          <th>Affiliates</th>
+          <th>Affiliate Campaigns</th>
+          <th>RingPools</th>
+          <th>Promo Numbers</th>
+        </tr>
+        <% @bulk_trackers.each do |bulk_tracker| %>
+            <tr>
+              <td>
+                <%= bulk_tracker.description %> <span class="created_at"><%= "#{bulk_tracker.created_at.to_s[0, 10]}" %> </span>
+              </td>
+              <%if bulk_tracker.advertiser_count %>
+                 <td><%= number_with_delimiter(bulk_tracker.advertiser_count, :delimiter => ',') %>
+                 </td>
+               <%else%>
+                  <td><%="0"%></td>
+               <%end %>
+
+              <%if bulk_tracker.advertiser_campaign_count %>
+                  <td><%= number_with_delimiter(bulk_tracker.advertiser_campaign_count, :delimiter => ',') %></td>
+              <%else%>
+                  <td><%="0"%></td>
+              <%end %>
+
+              <%if bulk_tracker.affiliate_count %>
+                  <td><%= number_with_delimiter(bulk_tracker.affiliate_count, :delimiter => ',') %></td>
+              <%else%>
+                  <td><%="0"%></td>
+              <%end %>
+
+              <%if bulk_tracker.affiliate_campaign_count %>
+                  <td><%= number_with_delimiter(bulk_tracker.affiliate_campaign_count, :delimiter => ',') %></td>
+              <%else%>
+                  <td><%="0"%></td>
+              <%end %>
+
+              <%if bulk_tracker.ring_pool_count %>
+                  <td><%= number_with_delimiter(bulk_tracker.ring_pool_count, :delimiter => ',') %></td>
+              <%else%>
+                  <td><%="0"%></td>
+              <%end %>
+
+
+              <%if bulk_tracker.promo_number_count %>
+                  <td><%= number_with_delimiter(bulk_tracker.promo_number_count, :delimiter => ',') %></td>
+              <%else%>
+                  <td><%="0"%></td>
+              <%end %>
+            </tr>
+        <% end %>
+        <td class="success_color">Totals</td>
+        <td class="success_color"><%= number_with_delimiter(@advertiser_total, :delimiter => ',') %></td>
+        <td class="success_color"><%= number_with_delimiter(@advertiser_campaign_total, :delimiter => ',') %></td>
+        <td class="success_color"><%= number_with_delimiter(@affiliate_total, :delimiter => ',') %></td>
+        <td class="success_color"><%= number_with_delimiter(@affiliate_campaign_total, :delimiter => ',') %></td>
+        <td class="success_color"><%= number_with_delimiter(@ring_pool_total, :delimiter => ',') %></td>
+        <td class="success_color"><%= number_with_delimiter(@promo_number_total, :delimiter => ',') %></td>
+       </table>
+
+  </div>
+</center>

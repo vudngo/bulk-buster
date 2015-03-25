@@ -1,6 +1,6 @@
-<center>
+<div class="main--pos">
 <h1>Add a Advertiser Bulk</h1>
-
+</div>
 
 <%= form_for(@advertiser_bulk_buster, :html => {:multipart => true}) do |f|%>
     <% if @advertiser_bulk_buster.errors.any? %>
@@ -11,24 +11,49 @@
           <% end %>
         </ul>
     <% end %>
-    <p>
-      <%= f.label :network_id, 'Network ID' %> <br />
-      <%= f.text_field :network_id %>
-    </p>
-    <p>
-      <%= label_tag :api_token, 'API Token' %> <br />
-      <%= text_field_tag :api_token %>
-    </p>
-    <p>
-      <%= f.label :task_description, 'Task Description' %> <br />
-      <%= f.text_area :task_description %>
-    </p>
-    <p>
-      <%= label_tag :attachment, 'Input File' %> <br />
-      <%= file_field_tag :attachment %>
-    </p>
-    <p>
-      <%= f.submit "Bust!" %>
-    </p>
+    <section class="main--pos">
+      <div class="title--header">
+        Credentials
+      </div>
+
+      <div class="inner">
+        <div class="tile">
+          <p>
+            <%= f.label :network_id, 'Network ID' %> <br />
+            <%= f.text_field :network_id %>
+          </p>
+        </div>
+        <div class="tile">
+          <p>
+            <%= label_tag :api_token, 'API Token' %> <br />
+            <%= text_field_tag :api_token %>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="main--pos">
+      <div class="title--header">
+        Finalize
+      </div>
+
+      <div class="inner">
+        <div class="tile">
+          <p>
+            <%= f.label :task_description, 'Task Description' %> <br />
+            <%= f.text_area :task_description %>
+          </p>
+        </div>
+
+        <div class="tile">
+          <p>
+            <%= label_tag :attachment, 'Input File' %> <br />
+            <%= file_field_tag :attachment %>
+          </p>
+          <p>
+            <%= f.submit "Bust!" %>
+          </p>
+        </div>
+      </div>
+    </section>
 <% end %>
-</center>

@@ -2,8 +2,8 @@ require 'csv'
 require 'logger'
 MAX_RETRY_COUNT = 2
 OUTPUT_DIRECTORY = 'public/output'
-NETWORK_DOMAIN = 'https://invoca.net'
-#NETWORK_DOMAIN = 'https://invocasandbox.com'
+#NETWORK_DOMAIN = 'https://invoca.net'
+NETWORK_DOMAIN = 'https://invocasandbox.com'
 CAMPAIGN_ATTRIBUTE_KEYS = [
     :name,
     :description,
@@ -37,10 +37,6 @@ PROMO_NUMBER_ATTRIBUTES = { :description => "",
 
 class Buster < ActiveRecord::Base
   self.abstract_class = true
-
-  #belongs_to :class_name
-  #has_one :class_name
-  #has_one :class_name
 
   def invoca_get_request(url, api_token)
     uri = URI(url)
@@ -78,6 +74,12 @@ class Buster < ActiveRecord::Base
 
   def parse_input_file(filename)
     csv = CSV.new(File.open("/Users/vu/practice_code/bulk_buster/public/uploads/" + filename).read, :headers => true, :header_converters => :symbol)
+    file_hash = csv.to_a.map {|row| row.to_hash }
+    return file_hash
+  end
+
+  def parse_output_file(filename)
+    csv = CSV.new(File.open("/Users/vu/practice_code/bulk_buster/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
     file_hash = csv.to_a.map {|row| row.to_hash }
     return file_hash
   end
@@ -128,6 +130,7 @@ class Buster < ActiveRecord::Base
         end
 
         puts Time.now - t
+        sleep 2
         #print "."
         #sleep 2
         # rescue
@@ -176,6 +179,35 @@ class Buster < ActiveRecord::Base
     invoca_post_request(url, body, api_token)
   end
 
+  def create_advertiser_ring_pools(ring_pool_hash, api_token)
+  i = 0
+  ring_pool_hash.each do |ring_pool|
+    #begin
+       puts ring_pool
+       create_advertiser_ring_pool(ring_pool, api_token)
+    # rescue
+    #   i += 1
+    #   if i > MAX_RETRY_COUNT
+    #     puts "retry limit has exceeded"
+    #     return false
+    #   end
+    #   puts "retry #{i}"
+       sleep 0.5
+    #   retry
+    # end
+  end
+  end
+
+  def create_advertiser_ring_pool(ring_pool, api_token)
+    #puts "in create functions"
+    ring_pool_body = build_ring_pool_body(ring_pool)
+    #puts "RingPool Body:"
+    #puts ring_pool_body
+    url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + ring_pool[:advertiser_id_from_network].to_s + "/advertiser_campaigns/" + ring_pool[:advertiser_campaign_id_from_network].to_s + "/ring_pools/" + ring_pool[:ringpool_id_from_network].to_s + ".json"
+    #puts "URL: #{url}"
+    invoca_post_request(url, ring_pool_body, api_token)
+  end
+
   def create_affiliate_promo_number(adv_id, campaign_id, affiliate_id, body, api_token)
     url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + adv_id.to_s + "/advertiser_campaigns/" + campaign_id.to_s + "/affiliates/" + affiliate_id.to_s + "/affiliate_campaigns/promo_numbers.json"
     invoca_post_request(url, body, api_token)
@@ -218,6 +250,14 @@ class Buster < ActiveRecord::Base
     promo_number_body
   end
 
+  def build_ring_pool_body(ring_pool)
+    ring_pool_body = ring_pool.clone
+    ring_pool_body.delete(:advertiser_id_from_network)
+    ring_pool_body.delete(:advertiser_campaign_id_from_network)
+    ring_pool_body.delete(:ringpool_id_from_network)
+    return ring_pool_body
+  end
+
   def get_campaign_terms_to_clone(api_token)
     response = get_campaign_terms(api_token)
     if response.code.to_i != 200
@@ -257,5 +297,18 @@ class Buster < ActiveRecord::Base
     invoca_get_request(url, api_token)
   end
 
+  def get_results(hash)
+    result_array = hash.map {|h| h[:status_code]}
+    result_hash = {}
+
+    result_array.each do |result|
+      if result_hash[result].nil?
+        result_hash[result] = 1
+      else
+        result_hash[result] += 1
+      end
+    end
+    return result_hash
+  end
 end
 

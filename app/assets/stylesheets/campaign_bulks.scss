@@ -9,3 +9,106 @@ line-height: 55px;
 margin-top: 0;
 color: #e6e6e6;
 }
+
+
+
+.text_right {
+  text-align: right;
+}
+
+
+.hulk_header {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 55px;
+  margin-top: 0;
+  color: #5ba51f;
+  font-weight: bolder;
+  text-align: center;
+  /*background-image: url("http://localhost:3000/assets/hulkeyes.png");*/
+  background-size: 100% auto;
+  opacity: 0.9;
+
+}
+
+
+.hulk_header_no_image {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 55px;
+  margin-top: 0;
+  color: #5ba51f;
+  font-weight: bolder;
+  text-align: center;
+  opacity: 0.9;
+
+}
+
+.hulk_background{
+  width: 700px;
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: 360px 195px;
+  opacity: 0.8;
+  background-image: url("http://localhost:3000/assets/bulk_result_0.png");
+}
+
+.campaign-tile {
+  display: inline-block;
+  width: 50%;
+  height: 100px;
+  color: #5ba51f;
+  font-weight: bolder;
+}
+
+
+.inner-credentials {
+  padding: 25px;
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: 334px;
+  opacity: 0.6;
+  background-image: url("http://localhost:3000/assets/new_campaign_bulk_0.png");
+  margin-right: 35px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+}
+
+
+.inner-details {
+  padding: 25px;
+  background-repeat: no-repeat;
+  background-position: right top;
+  background-size: 250px;
+  opacity: 0.7;
+  background-image: url("http://localhost:3000/assets/new_campaign_bulk_1.png");
+  margin-right: 35px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+}
+
+.indent {
+  margin-left: 30px;
+}
+
+.success_color {
+  color: #5ba51f;
+  font-size: 20px;
+  font-weight: bolder;
+}
+
+
+.failure_color {
+   color: #bf0000;
+   font-size: 20px;
+   font-weight: bolder;
+ }
+
+
+.created_at {
+  color: #b8b6b6;
+  font-size: 10px;
+  font-weight: bolder;
+}

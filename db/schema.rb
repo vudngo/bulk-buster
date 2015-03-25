@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150226220840) do
+ActiveRecord::Schema.define(version: 20150324182928) do
 
   create_table "advertiser_bulk_busters", force: :cascade do |t|
     t.string   "task_description",              null: false
@@ -20,6 +20,24 @@ ActiveRecord::Schema.define(version: 20150226220840) do
     t.integer  "percent_completed", default: 0, null: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+  end
+
+  create_table "advertiser_ring_pool_bulk_busters", force: :cascade do |t|
+    t.string   "task_description"
+    t.integer  "network_id"
+    t.string   "input_filename"
+    t.string   "output_filename"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "advertiser_ring_pool_busters", force: :cascade do |t|
+    t.string   "task_description"
+    t.integer  "network_id"
+    t.string   "input_filename"
+    t.string   "output_filename"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "affiliate_campaign_bulk_busters", force: :cascade do |t|
@@ -31,6 +49,18 @@ ActiveRecord::Schema.define(version: 20150226220840) do
     t.datetime "updated_at",                    null: false
   end
 
+  create_table "bulk_trackers", force: :cascade do |t|
+    t.string   "description"
+    t.integer  "advertiser_count"
+    t.integer  "advertiser_campaign_count"
+    t.integer  "affiliate_count"
+    t.integer  "affiliate_campaign_count"
+    t.integer  "ring_pool_count"
+    t.integer  "promo_number_count"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   create_table "campaign_bulk_busters", force: :cascade do |t|
     t.string   "task_description",                                null: false
     t.string   "network_id",                                      null: false
@@ -40,6 +70,23 @@ ActiveRecord::Schema.define(version: 20150226220840) do
     t.integer  "percent_completed",                   default: 0, null: false
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
+    t.string   "total_run_time"
   end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
 end
