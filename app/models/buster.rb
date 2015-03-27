@@ -1,5 +1,9 @@
 require 'csv'
 require 'logger'
+require 'net/http'
+
+ROOT_DIR = Rails.root.to_s
+
 MAX_RETRY_COUNT = 2
 OUTPUT_DIRECTORY = 'public/output'
 #NETWORK_DOMAIN = 'https://invoca.net'
@@ -73,13 +77,13 @@ class Buster < ActiveRecord::Base
   end
 
   def parse_input_file(filename)
-    csv = CSV.new(File.open("/Users/vu/practice_code/bulk_buster/public/uploads/" + filename).read, :headers => true, :header_converters => :symbol)
+    csv = CSV.new(File.open(ROOT_DIR + "/public/uploads/" + filename).read, :headers => true, :header_converters => :symbol)
     file_hash = csv.to_a.map {|row| row.to_hash }
     return file_hash
   end
 
   def parse_output_file(filename)
-    csv = CSV.new(File.open("/Users/vu/practice_code/bulk_buster/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
+    csv = CSV.new(File.open(ROOT_DIR + "/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
     file_hash = csv.to_a.map {|row| row.to_hash }
     return file_hash
   end
