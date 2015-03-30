@@ -31,6 +31,19 @@ h1 {
 }
 
 
+.hulk_header {
+    font-size: 36px;
+    font-weight: 300;
+    line-height: 55px;
+    margin-top: 0;
+    color: #5ba51f;
+    font-weight: bolder;
+    text-align: center;
+    /*background-image: url("http://localhost:3000/assets/hulkeyes.png");*/
+    background-size: 100% auto;
+    opacity: 0.9;
+}
+
 /* Global Positision Classes */
 
 .main--pos{
@@ -171,3 +184,13 @@ th, td {
     border-collapse: collapse;
     padding: 8px;}
 
+.created_at {
+    color: #b8b6b6;
+    font-size: 10px;
+    font-weight: bolder;
+}
+
+
+.indent {
+    margin-left: 30px;
+}

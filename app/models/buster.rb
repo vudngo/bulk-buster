@@ -2,8 +2,9 @@ require 'csv'
 require 'logger'
 MAX_RETRY_COUNT = 2
 OUTPUT_DIRECTORY = 'public/output'
-#NETWORK_DOMAIN = 'https://invoca.net'
-NETWORK_DOMAIN = 'https://invocasandbox.com'
+HTTP_CONTENT_TYPE = 'application/json'
+NETWORK_DOMAIN = 'https://invoca.net'
+#NETWORK_DOMAIN = 'https://invocasandbox.com'
 CAMPAIGN_ATTRIBUTE_KEYS = [
     :name,
     :description,
@@ -59,7 +60,26 @@ class Buster < ActiveRecord::Base
     uri.query = URI.encode_www_form(params)
     Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https', :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
       request = Net::HTTP::Post.new(uri.to_s)
-      request["Content-Type"] = 'application/json'
+      request["Content-Type"] = HTTP_CONTENT_TYPE
+      request.body = body.to_json
+      response = http.request request
+      puts response.code
+      #puts response.body
+      if response.code.to_s != '200' && response.code.to_s != '201'
+        puts url
+        #$LOG.error url + " - " + response.code.to_s + " - " + response.body
+      end
+      return response
+    end
+  end
+
+  def invoca_put_request(url, body, api_token)
+    uri = URI(url)
+    params = { :oauth_token =>  api_token}
+    uri.query = URI.encode_www_form(params)
+    Net::HTTP.start(uri.host, uri.port, :use_ssl => uri.scheme == 'https', :verify_mode => OpenSSL::SSL::VERIFY_NONE) do |http|
+      request = Net::HTTP::Put.new(uri.to_s)
+      request["Content-Type"] = HTTP_CONTENT_TYPE
       request.body = body.to_json
       response = http.request request
       puts response.code
@@ -79,8 +99,14 @@ class Buster < ActiveRecord::Base
   end
 
   def parse_output_file(filename)
-    csv = CSV.new(File.open("/Users/vu/practice_code/bulk_buster/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
-    file_hash = csv.to_a.map {|row| row.to_hash }
+
+    begin
+      csv = CSV.new(File.open("/Users/vu/practice_code/bulk_buster/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
+      file_hash = csv.to_a.map {|row| row.to_hash }
+    rescue
+      return {}
+    end
+
     return file_hash
   end
 
@@ -208,6 +234,35 @@ class Buster < ActiveRecord::Base
     invoca_post_request(url, ring_pool_body, api_token)
   end
 
+  def update_advertiser_promo_numbers(promo_number_hash, api_token)
+    i = 0
+    promo_number_hash.each do |promo_number|
+      #begin
+      #puts promo_number
+      update_advertiser_promo_number(promo_number, api_token)
+      # rescue
+      #   i += 1
+      #   if i > MAX_RETRY_COUNT
+      #     puts "retry limit has exceeded"
+      #     return false
+      #   end
+      #   puts "retry #{i}"
+      sleep 0.5
+      #   retry
+      # end
+    end
+  end
+
+  def update_advertiser_promo_number(promo_number, api_token)
+    #puts "in create functions"
+    promo_number_body = build_promo_number_body(promo_number)
+    puts "Promo Number Body:"
+    puts promo_number_body
+    url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + promo_number[:advertiser_id_from_network].to_s + "/advertiser_campaigns/" + promo_number[:advertiser_campaign_id_from_network].to_s + "/promo_numbers/" + promo_number[:promo_number].to_s + ".json"
+    puts "URL: #{url}"
+    invoca_put_request(url, promo_number_body, api_token)
+  end
+
   def create_affiliate_promo_number(adv_id, campaign_id, affiliate_id, body, api_token)
     url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + adv_id.to_s + "/advertiser_campaigns/" + campaign_id.to_s + "/affiliates/" + affiliate_id.to_s + "/affiliate_campaigns/promo_numbers.json"
     invoca_post_request(url, body, api_token)
@@ -246,7 +301,8 @@ class Buster < ActiveRecord::Base
 
   def build_promo_number_body(promo_number)
     promo_number_body = PROMO_NUMBER_ATTRIBUTES
-    promo_number_body[:description] = promo_number[:campaign_id_from_network]
+    promo_number_body[:description] = promo_number[:description]
+    promo_number_body[:media_type] = promo_number[:media_type]
     promo_number_body
   end
 
@@ -310,5 +366,6 @@ class Buster < ActiveRecord::Base
     end
     return result_hash
   end
+
 end
 
