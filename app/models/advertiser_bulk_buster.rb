@@ -11,7 +11,7 @@ class AdvertiserBulkBuster < Buster
 
     puts "Duplicate Count:" + file_hash.count.to_s
     puts "Duplicate Count:" + duplicates.count.to_s
-    create_advertiser_ring_pools(file_hash.uniq, api_token)
+    create_advertisers(file_hash.uniq, api_token)
   end
 end
 
