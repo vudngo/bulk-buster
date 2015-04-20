@@ -31,15 +31,6 @@ ActiveRecord::Schema.define(version: 20150324182928) do
     t.datetime "updated_at",       null: false
   end
 
-  create_table "advertiser_ring_pool_busters", force: :cascade do |t|
-    t.string   "task_description"
-    t.integer  "network_id"
-    t.string   "input_filename"
-    t.string   "output_filename"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-  end
-
   create_table "affiliate_campaign_bulk_busters", force: :cascade do |t|
     t.string   "task_description",              null: false
     t.string   "network_id",                    null: false

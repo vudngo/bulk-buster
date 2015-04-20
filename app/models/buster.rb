@@ -6,8 +6,8 @@ ROOT_DIR = Rails.root.to_s
 
 MAX_RETRY_COUNT = 2
 OUTPUT_DIRECTORY = 'public/output'
-#NETWORK_DOMAIN = 'https://invoca.net'
-NETWORK_DOMAIN = 'https://invocasandbox.com'
+NETWORK_DOMAIN = 'https://invoca.net'
+#NETWORK_DOMAIN = 'https://invocasandbox.com'
 CAMPAIGN_ATTRIBUTE_KEYS = [
     :name,
     :description,
@@ -23,23 +23,31 @@ CAMPAIGN_ATTRIBUTE_KEYS = [
     :url,
     :ivr_tree,
     :advertiser_payin,
-    :affiliate_payout]
+    :affiliate_payout
+]
 
 ADVERTISER_ATTRIBUTES = {
     :name => "",
     :approval_status => "Approved",
-    :default_creative_id_from_network => ""}
+    :default_creative_id_from_network => ""
+}
 
 AFFILIATE_CAMPAIGN_ATTRIBUTES = {
     :status => "Applied",
-    :affiliate_campaign_id_from_network => ""}
-
-PROMO_NUMBER_ATTRIBUTES = { :description => "",
-                 :media_type => "Online: Display"
+    :affiliate_campaign_id_from_network => ""
 }
+
+PROMO_NUMBER_ATTRIBUTES = {
+    :description => "",
+    :media_type => "Online: Display"
+}
+
 #$LOG = Logger.new("#{NETWORK_NAME}_#{Date.today.to_s}.log")
 
 class Buster < ActiveRecord::Base
+
+  # include Modules::ObjectBuilding
+
   self.abstract_class = true
 
   def invoca_get_request(url, api_token)
@@ -76,6 +84,7 @@ class Buster < ActiveRecord::Base
     end
   end
 
+
   def parse_input_file(filename)
     csv = CSV.new(File.open(ROOT_DIR + "/public/uploads/" + filename).read, :headers => true, :header_converters => :symbol)
     file_hash = csv.to_a.map {|row| row.to_hash }
@@ -88,67 +97,155 @@ class Buster < ActiveRecord::Base
     return file_hash
   end
 
+
+  def write_output_file(logfile, filename, headers = true, format = "hash")
+
+    print "Writing ouput file..."
+
+
+    if format == "hash"
+
+      CSV.open(Rails.root.join(OUTPUT_DIRECTORY, filename), "wb") do |csv|
+        csv << logfile.first.keys if headers
+        logfile.each do |hash|
+          csv << hash.values
+        end
+      end
+
+    elsif format == "string"
+
+      File.open(Rails.root.join(OUTGOING_FTP_DIRECTORY, filename),'w') do |f|
+        logfile.each do |call|
+          f.write(call + "\n")
+        end
+      end
+
+    end
+
+    print " complete.\n\n"
+
+
+  end
+
+
   def create_advertisers(advertisers_hash, api_token)
-    i = 0
+
+    # Setup logging to write output file
+    filename = "advertiser_output_#{self.id}.csv"
+    logfile  = []
+    total_busted = 0
+    start_time = Time.now
+
     advertisers_hash.each do |advertiser|
+
+      i = 0
       begin
+        puts "\n\nCreating advertiser with ID: " + advertiser[:advertiser_id_from_network]
+
         advertiser_body = build_advertiser_body(advertiser)
         puts advertiser_body
-        create_advertiser(advertiser[:advertiser_id_from_network], advertiser_body, api_token)
-          #print "."
-          #sleep 2
+        response = create_advertiser(advertiser[:advertiser_id_from_network], advertiser_body, api_token)
+        advertiser[:status] = response.code.to_s
+
+        puts "Received HTTP status: " + advertiser[:status]
+
+        if response.code.to_s == '200' || response.code.to_s == '201'
+          advertiser[:error] = "none"
+        else
+          advertiser[:error] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
+        end
+
       rescue
         i += 1
         if i > MAX_RETRY_COUNT
-          puts "retry limit has exceeded"
+          puts "Retry limit has exceeded"
           return false
         end
-        puts "retry #{i}"
+        puts "Retry #{i}"
         sleep 2
         retry
       end
+
+      logfile << advertiser
+      total_busted += 1
+
     end
+
+    puts "\n\nBusting Complete"
+    puts "-----------------------------"
+    puts "Total busted: #{total_busted}"
+    puts "Time Elapsed: " + (Time.now - start_time).to_s
+    puts "-----------------------------\n\n"
+
+    write_output_file(logfile, filename)
+
   end
-  
+
+
   def create_advertiser(adv_id, body, api_token)
     url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + adv_id.to_s + ".json"
     #url = "http://requestb.in/17z6g681?network_id=#{self.network_id}&advertiser_id_from_network=#{adv_id}"
     invoca_post_request(url, body, api_token)
   end
 
+
   def create_campaigns_by_cloning(campaigns_hash, api_token, campaign_terms)
+
+    # Setup logging to write output file
+    filename = "campaign_output_#{self.id}.csv"
+    logfile  = []
+    total_busted = 0
+    start_time = Time.now
+
     revision_type = get_campaign_terms_revision_type(campaign_terms)
     i = 0
-    File.open(Rails.root.join(OUTPUT_DIRECTORY,  "campaign_bulk_output_#{self.id}.csv") , 'wb') do |f|
-      f.write ['advertiser_id_from_network', 'campaign_id_from_network', 'name', 'destination_phone_number', 'url', 'status_code', 'error_message'].to_csv
+
       campaigns_hash.each do |campaign_inputs|
-        #begin
-        t = Time.now
-        campaign_body = build_campaign_body_by_cloning(revision_type, campaign_terms, campaign_inputs)
-        response = create_campaign(campaign_inputs[:advertiser_id_from_network], campaign_inputs[:campaign_id_from_network], api_token, campaign_body)
-        if response.code.to_s == '200' || response.code.to_s == '201'
-          campaign_go_live(campaign_inputs[:advertiser_id_from_network], campaign_inputs[:campaign_id_from_network], api_token)
-          f.write [campaign_inputs[:advertiser_id_from_network], campaign_inputs[:campaign_id_from_network], campaign_inputs[:name], campaign_inputs[:destination_phone_number], campaign_inputs[:url], response.code, ""].to_csv
-        else
-          f.write [campaign_inputs[:advertiser_id_from_network], campaign_inputs[:campaign_id_from_network], campaign_inputs[:name], campaign_inputs[:destination_phone_number], campaign_inputs[:url], response.code, JSON.parse(response.body, :symbolize_names => true)[:errors].to_json].to_csv
+        begin
+
+          puts "\n\nCloning into campaign: " + campaign_inputs[:name].to_s
+
+          t = Time.now
+          campaign_body = build_campaign_body_by_cloning(revision_type, campaign_terms, campaign_inputs)
+          response = create_campaign(campaign_inputs[:advertiser_id_from_network], campaign_inputs[:campaign_id_from_network], api_token, campaign_body)
+
+          if response.code.to_s == '200' || response.code.to_s == '201'
+            campaign_inputs[:error] = "none"
+            
+          else
+            campaign_inputs[:error] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
+          end
+
+          puts "Time for this campaign: " + (Time.now - t).to_s
+
+        rescue
+          i += 1
+          if i > MAX_RETRY_COUNT
+            puts "Retry limit has exceeded"
+            return false
+          end
+          puts "Retry: #{i}"
+          sleep 2
+          retry
         end
 
-        puts Time.now - t
+        # Update logging
+        logfile << campaign_inputs
+        total_busted += 1
+
         sleep 2
-        #print "."
-        #sleep 2
-        # rescue
-        #   i += 1
-        #   if i > MAX_RETRY_COUNT
-        #     puts "retry limit has exceeded"
-        #     return false
-        #   end
-        #   puts "retry #{i}"
-        #   sleep 2
-        #   retry
-        # end
+
       end
-    end
+
+
+    puts "\n\nBusting Complete"
+    puts "-----------------------------"
+    puts "Total busted: #{total_busted}"
+    puts "Time Elapsed: " + (Time.now - start_time).to_s
+    puts "-----------------------------\n\n"
+
+    write_output_file(logfile, filename)
+
   end
 
   def create_campaign(adv_id, campaign_id, api_token, body)
@@ -184,22 +281,22 @@ class Buster < ActiveRecord::Base
   end
 
   def create_advertiser_ring_pools(ring_pool_hash, api_token)
-  i = 0
-  ring_pool_hash.each do |ring_pool|
-    #begin
-       puts ring_pool
-       create_advertiser_ring_pool(ring_pool, api_token)
-    # rescue
-    #   i += 1
-    #   if i > MAX_RETRY_COUNT
-    #     puts "retry limit has exceeded"
-    #     return false
-    #   end
-    #   puts "retry #{i}"
-       sleep 0.5
-    #   retry
-    # end
-  end
+    i = 0
+    ring_pool_hash.each do |ring_pool|
+      #begin
+         puts ring_pool
+         create_advertiser_ring_pool(ring_pool, api_token)
+      # rescue
+      #   i += 1
+      #   if i > MAX_RETRY_COUNT
+      #     puts "retry limit has exceeded"
+      #     return false
+      #   end
+      #   puts "retry #{i}"
+         sleep 0.5
+      #   retry
+      # end
+    end
   end
 
   def create_advertiser_ring_pool(ring_pool, api_token)
@@ -315,4 +412,3 @@ class Buster < ActiveRecord::Base
     return result_hash
   end
 end
-

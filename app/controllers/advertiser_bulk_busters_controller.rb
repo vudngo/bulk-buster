@@ -21,15 +21,20 @@ class AdvertiserBulkBustersController < ApplicationController
     end
 
     if @advertiser_bulk_buster.save
+
       @advertiser_bulk_buster.reload
       @advertiser_bulk_buster.input_filename = "advertiser_bulk_#{@advertiser_bulk_buster.id}.csv"
       @advertiser_bulk_buster.save
+
       redirect_to advertiser_bulk_busters_path #, :notice => "Your advertiser bulk has been created"
+
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @advertiser_bulk_buster.input_filename), 'wb') do |file|
         file.write(uploaded_io.read)
       end
+
       @advertiser_bulk_buster.delay.bust(params[:api_token])
-      @advertiser_bulk_buster.create_bulk_tracker
+
+      #  @advertiser_bulk_buster.create_bulk_tracker
     else
       render "new"
     end
