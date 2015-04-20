@@ -6,10 +6,8 @@ ROOT_DIR = Rails.root.to_s
 
 MAX_RETRY_COUNT = 2
 OUTPUT_DIRECTORY = 'public/output'
-<<<<<<< HEAD
-=======
 HTTP_CONTENT_TYPE = 'application/json'
->>>>>>> master
+
 NETWORK_DOMAIN = 'https://invoca.net'
 #NETWORK_DOMAIN = 'https://invocasandbox.com'
 CAMPAIGN_ATTRIBUTE_KEYS = [
@@ -224,9 +222,11 @@ class Buster < ActiveRecord::Base
     start_time = Time.now
 
     revision_type = get_campaign_terms_revision_type(campaign_terms)
-    i = 0
 
       campaigns_hash.each do |campaign_inputs|
+
+        i = 0
+
         begin
 
           puts "\n\nCloning into campaign: " + campaign_inputs[:name].to_s
@@ -237,7 +237,7 @@ class Buster < ActiveRecord::Base
 
           if response.code.to_s == '200' || response.code.to_s == '201'
             campaign_inputs[:error] = "none"
-            
+            campaign_go_live(campaign_inputs[:advertiser_id_from_network],campaign_inputs[:campaign_id_from_network], api_token)
           else
             campaign_inputs[:error] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
           end
@@ -352,6 +352,71 @@ class Buster < ActiveRecord::Base
       #   retry
       # end
     end
+  end
+
+  def create_advertiser_promo_numbers(promo_number_hash, api_token)
+
+    # Setup logging to write output file
+    description = self.task_description.gsub!(/[!@%&"]/,'-')
+    filename = "#{description}--campaign_output_#{self.id}.csv"
+    logfile  = []
+    total_busted = 0
+    start_time = Time.now
+
+    i = 0
+    promo_number_hash.each do |promo_number|
+
+      promo_number[:numbers_pulled] = pull_promo_numbers(promo_number, api_token)
+
+      # Update logging
+      logfile << promo_number
+      total_busted += 1
+
+      sleep 2
+
+    end
+
+    puts "\n\nBusting Complete"
+    puts "-----------------------------"
+    puts "Total busted: #{total_busted}"
+    puts "Time Elapsed: " + (Time.now - start_time).to_s
+    puts "-----------------------------\n\n"
+
+    write_output_file(logfile, filename)
+
+  end
+
+  # Pull however many numbers are requested
+  def pull_promo_numbers(campaign, api_token)
+
+
+    numbers_needed = campaign[:quantity].to_i
+    numbers_pulled = ""
+
+    url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + campaign[:advertiser_id_from_network].to_s + "/advertiser_campaigns/" + campaign[:advertiser_campaign_id_from_network].to_s + "/promo_numbers.json"
+    body = {
+        :description => "Created on " + Time.now.strftime("%m/%d/%Y %H:%M"),
+        :media_type  => "Online: Display"
+    }
+
+    while( numbers_needed > 0 )
+      response = invoca_post_request(URI.encode(url), body, api_token)
+      details = response.to_json
+
+      if response
+        details = JSON.parse(response.body)
+        if numbers_needed == campaign[:quantity].to_i
+          numbers_pulled += details['promo_number']
+        else
+          numbers_pulled += "|" + details['promo_number']
+        end
+      end
+
+      numbers_needed -= 1
+    end
+
+    return numbers_pulled
+
   end
 
   def update_advertiser_promo_number(promo_number, api_token)

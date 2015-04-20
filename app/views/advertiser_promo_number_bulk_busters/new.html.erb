@@ -12,28 +12,28 @@
         </ul>
     <% end %>
 
-      <section class="main--pos">
-        <div class="title--header">
+      <section class="main--pos shadow">
+        <div class="title--header ">
           Credentials
         </div>
 
         <div class="inner">
           <div class="tile">
             <p>
-              <%= f.label :task_description, 'Task Description' %> <br />
-              <%= f.text_area :task_description %>
+              <%= f.label :task_description, 'Task Name' %> <br />
+              <%= f.text_field :task_description %>
+            </p>
+            <p>
+              <%= label_tag :api_token, 'API Token' %> <br />
+              <%= text_field_tag :api_token %>
             </p>
             <p>
               <%= f.label :network_id, 'Network ID' %> <br />
               <%= f.text_field :network_id %>
             </p>
+            <br>
           </div>
           <div class="tile">
-            <p>
-              <%= label_tag :api_token, 'API Token' %> <br />
-              <%= text_field_tag :api_token %>
-            </p>
-
             <p>
               <%= f.radio_button :request_type, 'post', :checked => true %> Create
               <br>
@@ -44,16 +44,15 @@
         </div>
       </section>
 
-      <section class="main--pos">
+      <section class="main--pos shadow">
         <div class="title--header">
          Finalize
         </div>
 
       <div class="inner">
-        <div class="tile">
-          <div class="inner">
-          <div class="tile">
           <p>
+            <%= link_to "Download Input File Template" , root_path << 'input_files/advertiser_promo_number.csv'  %>
+            <br><br>
             <%= label_tag :attachment, 'Input File' %> <br />
             <%= file_field_tag :attachment %>
           </p>
@@ -61,8 +60,6 @@
             <%= f.submit "Bust!" %>
           </p>
         </div>
-       </div>
-        </div>
-      </div>
+
       </section>
 <% end %>
