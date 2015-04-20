@@ -235,27 +235,35 @@ class Buster < ActiveRecord::Base
     invoca_post_request(url, ring_pool_body, api_token)
   end
 
-  def update_advertiser_promo_numbers(promo_number_hash, api_token)
+  def create_or_update_advertiser_promo_numbers(promo_number_hash, api_token)
     i = 0
     promo_number_hash.each do |promo_number|
-      #begin
-      #puts promo_number
-      update_advertiser_promo_number(promo_number, api_token)
-      # rescue
-      #   i += 1
-      #   if i > MAX_RETRY_COUNT
-      #     puts "retry limit has exceeded"
-      #     return false
-      #   end
-      #   puts "retry #{i}"
+      create_advertiser_promo_number(promo_number, api_token)
       sleep 0.5
-      #   retry
-      # end
     end
   end
 
+  def create_advertiser_promo_number(promo_number, api_token)
+    promo_number_body = build_promo_number_body(promo_number)
+    puts "Promo Number Body:"
+    puts promo_number_body
+    url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + promo_number[:advertiser_id_from_network].to_s + "/advertiser_campaigns/" + promo_number[:advertiser_campaign_id_from_network].to_s + "/promo_numbers/" + promo_number[:promo_number].to_s + ".json"
+    puts "URL: #{url}"
+     if request_type == 'post'
+       #invoca_post_request(url, promo_number_body, api_token)
+       puts "\n\n\n"
+       puts 'post'
+       puts "\n\n\n"
+     else if request_type == 'put'
+            #invoca_put_request(url, promo_number_body, api_token)
+            puts "\n\n\n"
+            puts 'put'
+            puts "\n\n\n"
+          end
+     end
+  end
+
   def update_advertiser_promo_number(promo_number, api_token)
-    #puts "in create functions"
     promo_number_body = build_promo_number_body(promo_number)
     puts "Promo Number Body:"
     puts promo_number_body
