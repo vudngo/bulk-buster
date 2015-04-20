@@ -6,6 +6,8 @@ class AdvertiserBulkBuster < Buster
   validates   :input_filename, :uniqueness => true
 
   def bust(api_token)
+
+    puts "Advertiser is busting"
     file_hash = parse_input_file(self.input_filename)
     duplicates = file_hash.select{|item| file_hash.count(item) > 1}.uniq
 
