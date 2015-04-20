@@ -1,0 +1,2 @@
+module AdvertiserPromoNumberBulkBustersHelper
+end

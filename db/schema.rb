@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150324182928) do
+ActiveRecord::Schema.define(version: 20150327000727) do
 
   create_table "advertiser_bulk_busters", force: :cascade do |t|
     t.string   "task_description",              null: false
@@ -20,6 +20,16 @@ ActiveRecord::Schema.define(version: 20150324182928) do
     t.integer  "percent_completed", default: 0, null: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+  end
+
+  create_table "advertiser_promo_number_bulk_busters", force: :cascade do |t|
+    t.string   "task_description"
+    t.integer  "network_id"
+    t.string   "input_filename"
+    t.string   "output_filename"
+    t.string   "request_type"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
   create_table "advertiser_ring_pool_bulk_busters", force: :cascade do |t|
