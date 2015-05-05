@@ -12,6 +12,10 @@ class AdvertiserPromoNumberBulkBuster < Buster
     puts "Duplicate Count:" + file_hash.count.to_s
     puts "Duplicate Count:" + duplicates.count.to_s
 
-    create_or_update_advertiser_promo_numbers(file_hash.uniq, api_token)
+    if self.request_type == "put"
+      update_advertiser_promo_numbers(file_hash.uniq, api_token)
+    else
+      create_advertiser_promo_numbers(file_hash.uniq, api_token)
+    end
   end
 end

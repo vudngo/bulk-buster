@@ -3,7 +3,7 @@
 </div>
 
 
-<section class="main--pos">
+<section class="main--pos shadow">
   <div class="title--header">
     <p>
       <%= link_to "Add a Advertiser Bulk to Bust", new_advertiser_bulk_buster_path%>
@@ -16,7 +16,7 @@
 
 
 <% @advertiser_bulk_busters.each do |advertiser_bulk_busters| %>
-    <section class="main--pos">
+    <section class="main--pos shadow">
       <div class="title--header">
         <%= "#{advertiser_bulk_busters.task_description}"  %> <span class="created_at"><%= "created at: #{advertiser_bulk_busters.created_at.to_s[0, 16]}" %> </span>
       </div>
