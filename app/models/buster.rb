@@ -155,7 +155,8 @@ class Buster < ActiveRecord::Base
   def create_advertisers(advertisers_hash, api_token)
 
     # Setup logging to write output file
-    filename = "advertiser_output_#{self.id}.csv"
+    description = self.task_description.gsub!(/[!@%&"]/,'-')
+    filename = "#{description}--advertiser_output_#{self.id}.csv"
     logfile  = []
     total_busted = 0
     start_time = Time.now
@@ -179,13 +180,17 @@ class Buster < ActiveRecord::Base
           advertiser[:error] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
         end
 
-      rescue
+      rescue => e
         i += 1
         if i > MAX_RETRY_COUNT
-          puts "Retry limit has exceeded"
-          return false
+          puts "Retry limit has exceeded, skipping this advertiser"
+          advertiser[:error] = e.to_s
+          logfile << advertiser
+
+          next
         end
         puts "Retry #{i}"
+        puts e.to_s
         sleep 2
         retry
       end
@@ -215,7 +220,6 @@ class Buster < ActiveRecord::Base
 
   def create_campaigns_by_cloning(campaigns_hash, api_token, campaign_terms)
 
-    # Setup logging to write output file
     # Setup logging to write output file
     description = self.task_description.gsub!(/[!@%&"]/,'-')
     filename = "#{description}--campaign_output_#{self.id}.csv"
@@ -474,7 +478,7 @@ class Buster < ActiveRecord::Base
     advertiser_body = ADVERTISER_ATTRIBUTES
     advertiser_body[:name] = advertiser[:advertiser_name]
     advertiser_body[:default_creative_id_from_network] = advertiser[:advertiser_id_from_network]
-    advertiser_body[:approval_status] = advertiser[:approval_status].capitalize
+    advertiser_body[:approval_status] = (advertiser[:approval_status]) ? advertiser[:approval_status].capitalize : ""
     advertiser_body
   end
 
