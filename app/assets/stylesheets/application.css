@@ -185,7 +185,8 @@ th, td {
 
 .stats{
     border-collapse: collapse;
-    padding: 8px;}
+    padding: 8px;
+}
 
 .created_at {
     color: #b8b6b6;
@@ -195,5 +196,5 @@ th, td {
 
 
 .indent {
-    margin-left: 30px;
+    padding: 10px 20px 15px 20px;
 }

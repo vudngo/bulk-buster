@@ -21,7 +21,7 @@ CAMPAIGN_ATTRIBUTE_KEYS = [
     :timezone,
     :auto_approve,
     :hours,
-   #:named_regions,
+    #:named_regions,
     :url,
     :ivr_tree,
     :advertiser_payin,
@@ -114,7 +114,7 @@ class Buster < ActiveRecord::Base
 
   def parse_output_file(filename)
     begin
-      csv = CSV.new(File.open("/Users/vu/practice_code/bulk_buster/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
+      csv = CSV.new(File.open( ROOT_DIR + "/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
       file_hash = csv.to_a.map {|row| row.to_hash }
     rescue
       return {}
@@ -216,7 +216,9 @@ class Buster < ActiveRecord::Base
   def create_campaigns_by_cloning(campaigns_hash, api_token, campaign_terms)
 
     # Setup logging to write output file
-    filename = "campaign_output_#{self.id}.csv"
+    # Setup logging to write output file
+    description = self.task_description.gsub!(/[!@%&"]/,'-')
+    filename = "#{description}--campaign_output_#{self.id}.csv"
     logfile  = []
     total_busted = 0
     start_time = Time.now
@@ -233,7 +235,8 @@ class Buster < ActiveRecord::Base
 
           t = Time.now
           campaign_body = build_campaign_body_by_cloning(revision_type, campaign_terms, campaign_inputs)
-          response = create_campaign(campaign_inputs[:advertiser_id_from_network], campaign_inputs[:campaign_id_from_network], api_token, campaign_body)
+          campaign_body[:ivr_tree] = replace_destination_numbers(campaign_body,campaign_inputs)
+          response = create_campaign(campaign_inputs[:advertiser_id_from_network], campaign_inputs[:advertiser_campaign_id_from_network], api_token, campaign_body)
 
           if response.code.to_s == '200' || response.code.to_s == '201'
             campaign_inputs[:error] = "none"
@@ -244,13 +247,14 @@ class Buster < ActiveRecord::Base
 
           puts "Time for this campaign: " + (Time.now - t).to_s
 
-        rescue
+        rescue => e
           i += 1
           if i > MAX_RETRY_COUNT
             puts "Retry limit has exceeded"
             return false
           end
           puts "Retry: #{i}"
+          puts e
           sleep 2
           retry
         end
@@ -273,6 +277,49 @@ class Buster < ActiveRecord::Base
     write_output_file(logfile, filename)
 
   end
+
+  def replace_destination_numbers(campaign_body, campaign_inputs)
+
+
+    def build_mapping(inputs)
+
+      i = 0
+      defaults = ["800-444-1111", "800-444-2222", "800-444-3333", "800-444-4444", "800-444-5555"]
+      mapping = []
+
+      while inputs["destination_phone_number_#{i+1}".to_sym]
+        mapping << [defaults[i], inputs["destination_phone_number_#{i+1}".to_sym] ]
+        i += 1
+      end
+
+      return mapping
+
+    end
+
+    ivr = campaign_body[:ivr_tree]
+    ivr_string = ivr.to_s
+
+    puts "\n\n"
+    print "Updating destinations:"
+
+    mapping = build_mapping(campaign_inputs)
+
+    mapping.each do |d|
+      replace = d[0].to_s.gsub("-","")
+      with = d[1].to_s.gsub("-","")
+      updated = ivr_string.gsub(replace,with)
+      ivr_string = updated
+      print "."
+    end
+
+    puts "\nDone.\n\n"
+    ivr = eval ivr_string
+
+    campaign_body[:ivr_tree] = ivr
+
+  end
+
+
 
   def create_campaign(adv_id, campaign_id, api_token, body)
     url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id + "/advertisers/" + adv_id.to_s + "/advertiser_campaigns/" + campaign_id.to_s + ".json"
@@ -390,7 +437,7 @@ class Buster < ActiveRecord::Base
   def pull_promo_numbers(campaign, api_token)
 
 
-    numbers_needed = campaign[:quantity].to_i
+    numbers_needed = campaign[:quantity].to_i || 1
     numbers_pulled = ""
 
     url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + campaign[:advertiser_id_from_network].to_s + "/advertiser_campaigns/" + campaign[:advertiser_campaign_id_from_network].to_s + "/promo_numbers.json"
@@ -399,7 +446,8 @@ class Buster < ActiveRecord::Base
         :media_type  => "Online: Display"
     }
 
-    while( numbers_needed > 0 )
+    while numbers_needed > 0
+
       response = invoca_post_request(URI.encode(url), body, api_token)
       details = response.to_json
 
@@ -438,6 +486,7 @@ class Buster < ActiveRecord::Base
     advertiser_body = ADVERTISER_ATTRIBUTES
     advertiser_body[:name] = advertiser[:advertiser_name]
     advertiser_body[:default_creative_id_from_network] = advertiser[:advertiser_id_from_network]
+    advertiser_body[:approval_status] = advertiser[:approval_status].capitalize
     advertiser_body
   end
 
