@@ -382,22 +382,11 @@ class Buster < ActiveRecord::Base
     invoca_post_request(url, ring_pool_body, api_token)
   end
 
-  def update_advertiser_promo_numbers(promo_number_hash, api_token)
+  def create_or_update_advertiser_promo_numbers(promo_number_hash, api_token)
     i = 0
     promo_number_hash.each do |promo_number|
-      #begin
-      #puts promo_number
-      update_advertiser_promo_number(promo_number, api_token)
-      # rescue
-      #   i += 1
-      #   if i > MAX_RETRY_COUNT
-      #     puts "retry limit has exceeded"
-      #     return false
-      #   end
-      #   puts "retry #{i}"
+      create_advertiser_promo_number(promo_number, api_token)
       sleep 0.5
-      #   retry
-      # end
     end
   end
 
@@ -468,7 +457,6 @@ class Buster < ActiveRecord::Base
   end
 
   def update_advertiser_promo_number(promo_number, api_token)
-    #puts "in create functions"
     promo_number_body = build_promo_number_body(promo_number)
     puts "Promo Number Body:"
     puts promo_number_body

@@ -17,6 +17,5 @@ class AdvertiserPromoNumberBulkBuster < Buster
     else
       create_advertiser_promo_numbers(file_hash.uniq, api_token)
     end
-
   end
 end

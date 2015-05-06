@@ -1,5 +1,13 @@
 class AdvertiserPromoNumberBulkBustersController < ApplicationController
 
+  def index
+    @advertiser_promo_number_bulk_busters = AdvertiserPromoNumberBulkBuster.all
+  end
+
+  def show
+    @advertiser_promo_number_bulk_buster = AdvertiserPromoNumberBulkBuster.find(params[:id])
+  end
+
   def new
     @advertiser_promo_number_bulk_buster = AdvertiserPromoNumberBulkBuster.new
   end
@@ -9,7 +17,6 @@ class AdvertiserPromoNumberBulkBustersController < ApplicationController
    begin
     @advertiser_promo_number_bulk_buster = AdvertiserPromoNumberBulkBuster.new(post_params)
     puts post_params
-
     if params[:attachment]
      uploaded_io = params[:attachment]
      @advertiser_promo_number_bulk_buster.input_filename =  uploaded_io.original_filename
@@ -32,9 +39,7 @@ class AdvertiserPromoNumberBulkBustersController < ApplicationController
     else
       render "new"
     end
-
    end
-
   end
 
   private
