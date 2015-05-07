@@ -49,7 +49,6 @@ PROMO_NUMBER_ATTRIBUTES = {
 class Buster < ActiveRecord::Base
 
   # include Modules::ObjectBuilding
-
   self.abstract_class = true
 
   def invoca_get_request(url, api_token)
@@ -105,22 +104,20 @@ class Buster < ActiveRecord::Base
     end
   end
 
-
   def parse_input_file(filename)
     csv = CSV.new(File.open(ROOT_DIR + "/public/uploads/" + filename).read, :headers => true, :header_converters => :symbol)
     file_hash = csv.to_a.map {|row| row.to_hash }
     return file_hash
   end
 
-  def parse_output_file(filename)
+  def parse_output_file()
     begin
-      csv = CSV.new(File.open( ROOT_DIR + "/public/output/" + filename).read, :headers => true, :header_converters => :symbol)
+      csv = CSV.new(File.open( ROOT_DIR + "/public/output/" + self.output_filename).read, :headers => true, :header_converters => :symbol)
       file_hash = csv.to_a.map {|row| row.to_hash }
     rescue
       return {}
     end
   end
-
 
   def write_output_file(logfile, filename, headers = true, format = "hash")
 
@@ -151,11 +148,10 @@ class Buster < ActiveRecord::Base
 
   end
 
-
   def create_advertisers(advertisers_hash, api_token)
 
     # Setup logging to write output file
-    filename = "advertiser_output_#{self.id}.csv"
+    filename = "#{self.task_description.gsub!(/[!@%&"]/,'-')}--advertiser_bulk_output--#{self.id}.csv"
     logfile  = []
     total_busted = 0
     start_time = Time.now
@@ -205,20 +201,18 @@ class Buster < ActiveRecord::Base
 
   end
 
-
   def create_advertiser(adv_id, body, api_token)
     url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + adv_id.to_s + ".json"
     #url = "http://requestb.in/17z6g681?network_id=#{self.network_id}&advertiser_id_from_network=#{adv_id}"
     invoca_post_request(url, body, api_token)
   end
 
-
   def create_campaigns_by_cloning(campaigns_hash, api_token, campaign_terms)
 
     # Setup logging to write output file
     # Setup logging to write output file
     description = self.task_description.gsub!(/[!@%&"]/,'-')
-    filename = "#{description}--campaign_output_#{self.id}.csv"
+    filename = "#{description}--campaign_bulk_output--#{self.id}.csv"
     logfile  = []
     total_busted = 0
     start_time = Time.now
@@ -319,8 +313,6 @@ class Buster < ActiveRecord::Base
 
   end
 
-
-
   def create_campaign(adv_id, campaign_id, api_token, body)
     url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id + "/advertisers/" + adv_id.to_s + "/advertiser_campaigns/" + campaign_id.to_s + ".json"
     invoca_post_request(url, body, api_token)
@@ -329,7 +321,7 @@ class Buster < ActiveRecord::Base
   def create_affiliate_campaigns(affiliate_campaigns_hash, api_token)
     i = 0
     affiliate_campaigns_hash.each do |affiliate_campaign|
-      #begin
+      # begin
         affiliate_campaign_body = build_affiliate_campaign_body(affiliate_campaign)
         puts affiliate_campaign
         create_affiliate_campaign(affiliate_campaign[:advertiser_id_from_network], affiliate_campaign[:campaign_id_from_network], affiliate_campaign[:affiliate_id_from_network], affiliate_campaign_body, api_token)
@@ -569,5 +561,4 @@ class Buster < ActiveRecord::Base
     end
     return result_hash
   end
-
 end

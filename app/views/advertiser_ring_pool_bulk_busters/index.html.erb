@@ -1,0 +1,37 @@
+<div class="main--pos">
+  <div class="hulk_header"><br>The Advertiser RingPool Bulk Buster<br><br></div>
+</div>
+
+
+<section class="main--pos">
+  <div class="title--header">
+    <p>
+      <%= link_to "Add Advertiser RingPool Bulk to Bust", new_advertiser_ring_pool_bulk_buster_path %>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;
+      <%= link_to "Bulk Tracker", bulk_trackers_path %>
+    </p>
+  </div>
+</section>
+<br>
+<% @advertiser_ring_pool_bulk_busters.each do |advertiser_ring_pool_bulk_buster| %>
+    <section class="main--pos">
+      <div class="title--header">
+        <%= "#{advertiser_ring_pool_bulk_buster.task_description}"  %> <span class="created_at"><%= "created at: #{advertiser_ring_pool_bulk_buster.created_at.to_s[0, 16]}" %> </span>
+      </div>
+
+      <div class="indent">
+        <%= link_to "results", advertiser_ring_pool_bulk_buster  %> |
+        <%= link_to "edit", edit_advertiser_ring_pool_bulk_buster_path(advertiser_ring_pool_bulk_buster) %> |
+        <%= link_to "delete", advertiser_ring_pool_bulk_buster, :confirm => "Are You Sure?", :method => :delete %>
+        <br>
+
+      </div>
+    </section>
+<% end %>
+<br>
+<br>
+

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150327000727) do
+ActiveRecord::Schema.define(version: 20150507212928) do
 
   create_table "advertiser_bulk_busters", force: :cascade do |t|
     t.string   "task_description",              null: false
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 20150327000727) do
     t.integer  "percent_completed", default: 0, null: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.string   "total_run_time"
+    t.string   "output_filename"
   end
 
   create_table "advertiser_promo_number_bulk_busters", force: :cascade do |t|
@@ -30,9 +32,20 @@ ActiveRecord::Schema.define(version: 20150327000727) do
     t.string   "request_type"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.string   "total_run_time"
   end
 
   create_table "advertiser_ring_pool_bulk_busters", force: :cascade do |t|
+    t.string   "task_description"
+    t.integer  "network_id"
+    t.string   "input_filename"
+    t.string   "output_filename"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.string   "total_run_time"
+  end
+
+  create_table "advertiser_ring_pool_busters", force: :cascade do |t|
     t.string   "task_description"
     t.integer  "network_id"
     t.string   "input_filename"
@@ -48,6 +61,8 @@ ActiveRecord::Schema.define(version: 20150327000727) do
     t.integer  "percent_completed", default: 0, null: false
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
+    t.string   "total_run_time"
+    t.string   "output_filename"
   end
 
   create_table "bulk_trackers", force: :cascade do |t|
@@ -72,6 +87,7 @@ ActiveRecord::Schema.define(version: 20150327000727) do
     t.datetime "created_at",                                      null: false
     t.datetime "updated_at",                                      null: false
     t.string   "total_run_time"
+    t.string   "output_filename"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|

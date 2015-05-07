@@ -1,5 +1,5 @@
 <div class="main--pos">
-  <div class="hulk_header"><br>The Advertiser Bulk Buster<br><br></div>
+  <div class="hulk_header"><br>Advertiser Bulk Buster<br><br></div>
 </div>
 
 
@@ -7,7 +7,12 @@
   <div class="title--header">
     <p>
       <%= link_to "Add a Advertiser Bulk to Bust", new_advertiser_bulk_buster_path%>
-
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;
       <%= link_to "Bulk Tracker", bulk_trackers_path %>
     </p>
   </div>
@@ -15,16 +20,16 @@
 <br>
 
 
-<% @advertiser_bulk_busters.each do |advertiser_bulk_busters| %>
+<% @advertiser_bulk_busters.each do |advertiser_bulk_buster| %>
     <section class="main--pos shadow">
       <div class="title--header">
-        <%= "#{advertiser_bulk_busters.task_description}"  %> <span class="created_at"><%= "created at: #{advertiser_bulk_busters.created_at.to_s[0, 16]}" %> </span>
+        <%= "#{advertiser_bulk_buster.task_description}"  %> <span class="created_at"><%= "created at: #{advertiser_bulk_buster.created_at.to_s[0, 16]}" %> </span>
       </div>
 
       <div class="indent">
-        <%= link_to "results", advertiser_bulk_busters  %> |
-        <%= link_to "edit", edit_advertiser_bulk_buster_path(advertiser_bulk_busters) %> |
-        <%= link_to "delete", advertiser_bulk_busters, :confirm => "Are You Sure?", :method => :delete %>
+        <%= link_to "results", advertiser_bulk_buster  %> |
+        <%= link_to "edit", edit_advertiser_bulk_buster_path(advertiser_bulk_buster) %> |
+        <%= link_to "delete", advertiser_bulk_buster, :confirm => "Are You Sure?", :method => :delete %>
         <br>
 
       </div>

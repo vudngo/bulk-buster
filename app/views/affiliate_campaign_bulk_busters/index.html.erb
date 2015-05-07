@@ -1,20 +1,37 @@
+<div class="main--pos">
+    <div class="hulk_header"> <br>Affiliate Campaign Bulk Buster<br><br></div>
+  </div>
 
-<center>
-  <h1>Affiliate Campaign Bulk Buster</h1>
-  ************************************************************************
-
-  <% @affiliate_campaign_bulk_busters.each do |affiliate_campaign_bulk_buster| %>
-      <br>
-      <%= link_to affiliate_campaign_bulk_buster.task_description,  affiliate_campaign_bulk_buster %> |
-      <%= link_to "edit", edit_affiliate_campaign_bulk_buster_path(affiliate_campaign_bulk_buster) %> |
-      <%= link_to "delete", affiliate_campaign_bulk_buster, :confirm => "Are You Sure?", :method => :delete %>
-      <br>
-
-  <% end %>
-
-
+  <section class="main--pos">
+    <div class="title--header">
+      <p>
+        <%= link_to "Add a Affiliate Campaign Bulk to Bust", new_affiliate_campaign_bulk_buster_path %>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        &nbsp;
+        <%= link_to "Bulk Tracker", bulk_trackers_path %>
+      </p>
+    </div>
+  </section>
   <br>
-  <br>
 
-  <p><%= link_to "Add a affiliate_campaign Bulk to Bust", new_affiliate_campaign_bulk_buster_path %></p>
-</center>
+<br>
+<% @affiliate_campaign_bulk_busters.each do |affiliate_campaign_bulk_buster| %>
+    <section class="main--pos">
+      <div class="title--header">
+        <%= "#{affiliate_campaign_bulk_buster.task_description}"  %> <span class="created_at"><%= "created at: #{affiliate_campaign_bulk_buster.created_at.to_s[0, 16]}" %> </span>
+      </div>
+
+      <div class="indent">
+        <%= link_to "results", affiliate_campaign_bulk_buster  %> |
+        <%= link_to "edit", edit_affiliate_campaign_bulk_buster_path(affiliate_campaign_bulk_buster) %> |
+        <%= link_to "delete", affiliate_campaign_bulk_buster, :confirm => "Are You Sure?", :method => :delete %>
+        <br>
+
+      </div>
+    </section>
+<% end %>
+<br>
+<br>

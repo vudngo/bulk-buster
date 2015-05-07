@@ -1,15 +1,16 @@
 <br/><br/>
 <div class="main--pos">
-  <h1><%= puts "#{@advertiser_bulk_buster.task_description.upcase} Results" %></h1>
+  <h1><%= puts "#{@advertiser_ring_pool_bulk_buster.task_description.upcase} Results" %></h1>
 </div>
 
-<%= form_for(@advertiser_bulk_buster, :html => {:multipart => true}) do |f|%>
+
+<%= form_for(@advertiser_ring_pool_bulk_buster, :html => {:multipart => true}) do |f|%>
     <section class="main--pos">
       <div class="title--header">
-        STATS FOR  <%= "#{@advertiser_bulk_buster.task_description}"%>
+        STATS FOR  <%= "#{@advertiser_ring_pool_bulk_buster.task_description}"%>
         <div style="font-size: 100%;">
-          <%= link_to "Input File", "/uploads/#{@advertiser_bulk_buster.input_filename}" %> |
-          <%= link_to "Results", "/output/#{@advertiser_bulk_buster.output_filename}" %>
+          <%= link_to "Input File", "/uploads/#{@advertiser_ring_pool_bulk_buster.input_filename}" %> |
+          <%= link_to "Results", "/output/#{@advertiser_ring_pool_bulk_buster.output_file}" %>
         </div>
       </div>
       <div class="hulk_background">
@@ -22,7 +23,7 @@
               <%= f.label :failure_count, "Campaigns Failed to be Created: " %> <span class="failure_color"> <%= "#{@failure_count}" %> </span> <br/>
             </p>
             <p>
-              <%= f.label :failure_count, "Total Run Time: " %> <span class="success_color"> <%= "#{@advertiser_bulk_buster.total_run_time}" %> </span> <br/>
+              <%= f.label :failure_count, "Total Run Time: " %> <span class="success_color"> <%= "#{@advertiser_ring_pool_bulk_buster.total_run_time}" %> </span> <br/>
             </p>
             <br/>
           </div>
@@ -30,4 +31,3 @@
       </div>
     </section>
 <% end %>
-

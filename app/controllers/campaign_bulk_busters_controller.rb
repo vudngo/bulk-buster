@@ -6,13 +6,15 @@ class CampaignBulkBustersController < ApplicationController
 
   def show
     @campaign_bulk_buster = CampaignBulkBuster.find(params[:id])
-    filename = "campaign_bulk_output_#{@campaign_bulk_buster.id}.csv"
-    output_hash = @campaign_bulk_buster.parse_output_file(filename)
-    @result_hash = @campaign_bulk_buster.get_results(output_hash)
-    @success_count = @result_hash["201"]
-    @failure_count = output_hash.count -  @success_count
-    puts "failure count #{@failure_count}"
-    puts "\n\n\n"
+    output_hash = @campaign_bulk_buster.parse_output_file
+    if output_hash.empty?
+      @success_count = 0
+      @failure_count = 0
+    else
+      @result_hash = @campaign_bulk_buster.get_results(output_hash)
+      @success_count = @result_hash["201"]
+      @failure_count = output_hash.count -  @success_count
+    end
   end
 
   def new
@@ -29,7 +31,7 @@ class CampaignBulkBustersController < ApplicationController
 
     if @campaign_bulk_buster.save
       @campaign_bulk_buster.reload
-      @campaign_bulk_buster.input_filename = "campaign_bulk_#{@campaign_bulk_buster.id}.csv"
+      @campaign_bulk_buster.input_filename = "#{@campaign_bulk_buster.task_description.gsub!(/[!@%&"]/,'-')}--campaign_bulk_input--#{@campaign_bulk_buster.id}.csv"
       @campaign_bulk_buster.save
       redirect_to campaign_bulk_busters_path #, :notice => "Your campaign bulk has been created"
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @campaign_bulk_buster.input_filename), 'wb') do |file|

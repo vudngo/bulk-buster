@@ -4,12 +4,12 @@
       <table style="width:80%; border: 1px solid white; border-collapse: collapse;">
         <tr>
           <th></th>
-          <th>Advertisers</th>
-          <th>Advertiser Campaigns</th>
-          <th>Affiliates</th>
-          <th>Affiliate Campaigns</th>
-          <th>RingPools</th>
-          <th>Promo Numbers</th>
+          <th><%= link_to "Advertisers", advertiser_bulk_busters_path  %></th>
+          <th><%= link_to "Advertiser Campaigns", campaign_bulk_busters_path  %></th>
+          <th><%= link_to "Affiliates", affiliate_campaign_bulk_busters_path  %></th>
+          <th><%= link_to "Affiliate Campaigns", affiliate_campaign_bulk_busters_path  %></th>
+          <th><%= link_to "RingPools", advertiser_ring_pool_bulk_busters_path  %></th>
+          <th><%= link_to "Promo Numbers", advertiser_promo_number_bulk_busters_path  %></th>
         </tr>
         <% @bulk_trackers.each do |bulk_tracker| %>
             <tr>
