@@ -112,12 +112,23 @@ section {
 }
 
 input[type=text] {
-  width: 100%;
+  width: 97%;
   height: 25px;
   padding: 5px;
   border-radius: 3px;
   box-shadow: 1px 1px 9px -4px inset;
   font-size: 16px;
+}
+
+section input {
+    margin-bottom: 25px;
+}
+
+section input[type=submit] {
+    width: 135px;
+    height: 200px !important;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .tile label {

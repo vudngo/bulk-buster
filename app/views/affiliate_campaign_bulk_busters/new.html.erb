@@ -1,7 +1,8 @@
-<center>
+
   <h1>Add an Affiliate Campaign Bulk</h1>
 
-
+<section class="main--pos shadow">
+  <div class="inner">
   <%= form_for(@affiliate_campaign_bulk_buster, :html => {:multipart => true}) do |f|%>
       <% if @affiliate_campaign_bulk_buster.errors.any? %>
           <h2>Errors:</h2>
@@ -11,24 +12,21 @@
             <% end %>
           </ul>
       <% end %>
-      <p>
+
+        <%= f.label :task_description, 'Task Name' %> <br />
+        <%= f.text_field :task_description %>
+        <br>
         <%= f.label :network_id, 'Network ID' %> <br />
         <%= f.text_field :network_id %>
-      </p>
-      <p>
+        <br>
         <%= label_tag :api_token, 'API Token' %> <br />
         <%= text_field_tag :api_token %>
-      </p>
-      <p>
-        <%= f.label :task_description, 'Task Description' %> <br />
-        <%= f.text_area :task_description %>
-      </p>
-      <p>
+        <br>
         <%= label_tag :attachment, 'Input File' %> <br />
         <%= file_field_tag :attachment %>
-      </p>
-      <p>
+        <br>
         <%= f.submit "Bust!" %>
-      </p>
+
   <% end %>
-</center>
+      </div>
+</section>

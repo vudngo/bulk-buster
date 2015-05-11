@@ -244,7 +244,7 @@ class Buster < ActiveRecord::Base
 
           if response.code.to_s == '200' || response.code.to_s == '201'
             campaign_inputs[:error] = "none"
-            campaign_go_live(campaign_inputs[:advertiser_id_from_network],campaign_inputs[:campaign_id_from_network], api_token)
+            campaign_go_live(campaign_inputs[:advertiser_id_from_network], campaign_inputs[:advertiser_campaign_id_from_network], api_token)
           else
             campaign_inputs[:error] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
           end
@@ -442,7 +442,6 @@ class Buster < ActiveRecord::Base
     while numbers_needed > 0
 
       response = invoca_post_request(URI.encode(url), body, api_token)
-      details = response.to_json
 
       if response
         details = JSON.parse(response.body)
