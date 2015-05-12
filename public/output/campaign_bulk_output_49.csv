@@ -1,4 +1,0 @@
-advertiser_id_from_network,campaign_id_from_network,name,destination_phone_number,url,status_code,status_message
-6,122227,Loma Colorado - Meridian,8666323621,http://www.pulte.com/communities/nm/rio-rancho/loma-colorado/2227/index1.aspx,201,""
-6,122259,Hampton Village-Ave Maria,28667365160,http://www.pulte.com/communities/fl/ave-maria/hampton-village-ave-maria/2259/index1.aspx,403,"{""ivr_tree"":{""destination_phone_number"":[""national number must have exactly 10 digits or start with +""],""destination_number"":[""cannot be called""]}}"
-6,218213,Wakefield Meadows,,http://www.pulte.com/communities/ri/wakefield/WakefieldMeadows/2813/index1.aspx,403,"{""ivr_tree"":{""destination_number"":[""must be set""]}}"
