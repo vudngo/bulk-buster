@@ -2,30 +2,14 @@ require 'csv'
 require 'logger'
 require 'net/http'
 
-
 OUTPUT_DIRECTORY = 'public/output'
 HTTP_CONTENT_TYPE = 'application/json'
-
-NETWORK_DOMAIN = 'https://invoca.net'
-#NETWORK_DOMAIN = 'https://invocasandbox.com'
-
-
-AFFILIATE_CAMPAIGN_ATTRIBUTES = {
-    :status => "Applied",
-    :affiliate_campaign_id_from_network => ""
-}
-
-PROMO_NUMBER_ATTRIBUTES = {
-    :description => "",
-    :media_type => "Online: Display"
-}
 
 class Buster < ActiveRecord::Base
 
   # include Modules::ObjectBuilding
 
   self.abstract_class = true
-
 
   def replace_destination_numbers(campaign_body, campaign_inputs)
 
@@ -101,6 +85,15 @@ class Buster < ActiveRecord::Base
     invoca_post_request(url, ring_pool_body, api_token)
   end
 
+  def build_ring_pool_body(ring_pool)
+    ring_pool_body = ring_pool.clone
+    ring_pool_body.delete(:advertiser_id_from_network)
+    ring_pool_body.delete(:advertiser_campaign_id_from_network)
+    ring_pool_body.delete(:ringpool_id_from_network)
+    return ring_pool_body
+  end
+
+
 
 
 
@@ -113,25 +106,6 @@ class Buster < ActiveRecord::Base
     puts "URL: #{url}"
     invoca_put_request(url, promo_number_body, api_token)
   end
-
-  def create_affiliate_promo_number(adv_id, campaign_id, affiliate_id, body, api_token)
-    url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + adv_id.to_s + "/advertiser_campaigns/" + campaign_id.to_s + "/affiliates/" + affiliate_id.to_s + "/affiliate_campaigns/promo_numbers.json"
-    invoca_post_request(url, body, api_token)
-  end
-
-
-
-
-
-  def build_ring_pool_body(ring_pool)
-    ring_pool_body = ring_pool.clone
-    ring_pool_body.delete(:advertiser_id_from_network)
-    ring_pool_body.delete(:advertiser_campaign_id_from_network)
-    ring_pool_body.delete(:ringpool_id_from_network)
-    return ring_pool_body
-  end
-
-
 
 
   def get_results(hash)
