@@ -8,8 +8,7 @@ class Briefcase
   def initialize(description)
     @start_time = Time.now
     @current_time = Time.now
-    description = description.gsub!(/[!@%&"]/,'-')
-    @filename = "#{description}--test"
+    @filename = "#{description}_output"
     @logfile = []
     @total_busted = 0
     @root_dir = Rails.root.to_s

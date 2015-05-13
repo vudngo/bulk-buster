@@ -36,7 +36,7 @@ class CampaignBulkBuster < Buster
       puts "Cloning into: #{campaign[:name].to_s}"
 
       begin
-        this = Invoca::AdvertiserCampaign.new(self.network_id.to_s,campaign[:advertiser_id_from_network], campaign[:advertiser_id_from_network], api_token)
+        this = Invoca::AdvertiserCampaign.new(self.network_id.to_s,campaign[:advertiser_id_from_network], campaign[:advertiser_campaign_id_from_network], api_token)
         new_campaign = campaign_body
 
         new_campaign[:name] = campaign[:name]
@@ -50,13 +50,13 @@ class CampaignBulkBuster < Buster
           this.pull_promo_numbers(campaign[:quantity]) if campaign[:quantity]
           this.go_live
         else
-          campaign[:error] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
+          campaign[:status] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
         end
 
       rescue => error
         if try >= tries_available
           puts "Skipping this campaign"
-          campaign[:error] = "unspecified error"
+          campaign[:status] = "unspecified error"
           files.log(campaign)
           next
         end

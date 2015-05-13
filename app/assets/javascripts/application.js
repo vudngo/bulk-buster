@@ -14,3 +14,37 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require_tree .
+
+/* Animation for Hamburger */
+
+$(function() {
+
+    "use strict";
+
+    var toggles = document.querySelectorAll(".cmn-toggle-switch");
+
+    for (var i = toggles.length - 1; i >= 0; i--) {
+        var toggle = toggles[i];
+        toggleHandler(toggle);
+    };
+
+    function toggleMenu(action) {
+        switch (action) {
+            case "close":
+                $("#menu").fadeOut();
+                break;
+            case "open":
+                $("#menu").fadeIn();
+                break;
+        }
+    }
+
+    function toggleHandler(toggle) {
+        toggle.addEventListener( "click", function(e) {
+            e.preventDefault();
+            (this.classList.contains("active") === true) ? toggleMenu("close") : toggleMenu("open");
+            (this.classList.contains("active") === true) ? this.classList.remove("active") : this.classList.add("active");
+        });
+    }
+
+})();

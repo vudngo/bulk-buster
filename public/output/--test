@@ -1,3 +1,0 @@
-advertiser_id_from_network,advertiser_campaign_id_from_network,affiliate_id_from_network,affiliate_campaign_id_from_network,status
-refactor,refactor,44,test1,success
-ivrtest,ivr2,44,testing_error,"{:status=>[""cannot transition from 'Start'. Possible transitions: 'Applied'.""]}"

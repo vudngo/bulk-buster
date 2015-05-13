@@ -1,74 +1,51 @@
 class AffiliatePromoNumbersController < ApplicationController
-  before_action :set_affiliate_promo_number, only: [:show, :edit, :update, :destroy]
-
-  # GET /affiliate_promo_numbers
-  # GET /affiliate_promo_numbers.json
   def index
     @affiliate_promo_numbers = AffiliatePromoNumber.all
   end
 
-  # GET /affiliate_promo_numbers/1
-  # GET /affiliate_promo_numbers/1.json
   def show
+    @affiliate_promo_number = AffiliatePromoNumber.find(params[:id])
   end
 
-  # GET /affiliate_promo_numbers/new
   def new
     @affiliate_promo_number = AffiliatePromoNumber.new
   end
 
-  # GET /affiliate_promo_numbers/1/edit
-  def edit
-  end
-
-  # POST /affiliate_promo_numbers
-  # POST /affiliate_promo_numbers.json
   def create
-    @affiliate_promo_number = AffiliatePromoNumber.new(affiliate_promo_number_params)
 
-    respond_to do |format|
+    begin
+      @affiliate_promo_number = AffiliatePromoNumber.new(post_params)
+      puts post_params
+      if params[:attachment]
+        uploaded_io = params[:attachment]
+        @affiliate_promo_number.input_filename =  uploaded_io.original_filename
+        @affiliate_promo_number.task_description = params[:task_description].gsub!(' ','-')
+      end
+
+
       if @affiliate_promo_number.save
-        format.html { redirect_to @affiliate_promo_number, notice: 'Affiliate promo number was successfully created.' }
-        format.json { render :show, status: :created, location: @affiliate_promo_number }
-      else
-        format.html { render :new }
-        format.json { render json: @affiliate_promo_number.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
-  # PATCH/PUT /affiliate_promo_numbers/1
-  # PATCH/PUT /affiliate_promo_numbers/1.json
-  def update
-    respond_to do |format|
-      if @affiliate_promo_number.update(affiliate_promo_number_params)
-        format.html { redirect_to @affiliate_promo_number, notice: 'Affiliate promo number was successfully updated.' }
-        format.json { render :show, status: :ok, location: @affiliate_promo_number }
-      else
-        format.html { render :edit }
-        format.json { render json: @affiliate_promo_number.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
-  # DELETE /affiliate_promo_numbers/1
-  # DELETE /affiliate_promo_numbers/1.json
-  def destroy
-    @affiliate_promo_number.destroy
-    respond_to do |format|
-      format.html { redirect_to affiliate_promo_numbers_url, notice: 'Affiliate promo number was successfully destroyed.' }
-      format.json { head :no_content }
+        @affiliate_promo_number.reload
+        @affiliate_promo_number.input_filename = "#{@affiliate_promo_number.task_description}--affiliate_promo_numbers--#{@affiliate_promo_number.id}.csv"
+        @affiliate_promo_number.save
+
+        redirect_to advertiser_ring_pool_bulk_busters_path #, :notice => "Your advertiser bulk has been created"
+        File.open(Rails.root.join(UPLOAD_DIRECTORY, @affiliate_promo_number.input_filename), 'wb') do |file|
+          file.write(uploaded_io.read)
+        end
+
+        @affiliate_promo_number.delay.bust(params[:api_token])
+      else
+        render "new"
+      end
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_affiliate_promo_number
-      @affiliate_promo_number = AffiliatePromoNumber.find(params[:id])
-    end
+  def post_params
+    allow = [:network_id, :task_description, :input_filename, :request_type]
+    params.require(:affiliate_promo_number).permit(allow)
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def affiliate_promo_number_params
-      params.require(:affiliate_promo_number).permit(:task_description, :network_id, :input_filename, :output_filename)
-    end
 end

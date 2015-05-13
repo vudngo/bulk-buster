@@ -198,10 +198,9 @@ class Invoca
     attr_accessor :network_id, :id_from_network, :api_key
 
 
-    def initialize(network_id, advertiser_id_from_network, advertiser_campaign_id_from_network, affiliate_id_from_network, id_from_network, api_key)
+    def initialize(network_id, advertiser_id_from_network, advertiser_campaign_id_from_network, affiliate_id_from_network, api_key)
       @network_id = network_id
       @affiliate_id_from_network = affiliate_id_from_network
-      @id_from_network = id_from_network
       @advertiser_id_from_network = advertiser_id_from_network
       @advertiser_campaign_id_from_network = advertiser_campaign_id_from_network
       @api_key = api_key
@@ -223,7 +222,8 @@ class Invoca
       numbers_needed = quantity.to_i || 1
       numbers_pulled = ""
 
-      url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @advertiser_campaign_id_from_network.to_s + "/affiliates/" + @id_from_network + "promo_numbers.json"
+      url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @advertiser_campaign_id_from_network.to_s + "/affiliates/" + @affiliate_id_from_network + "/affiliate_campaigns/promo_numbers.json"
+
       body = {
           :description => description,
           :media_type  => media_type

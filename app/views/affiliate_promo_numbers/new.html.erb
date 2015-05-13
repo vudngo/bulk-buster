@@ -2,14 +2,16 @@
   <h1>Bust out some Affiliate Promo Numbers</h1>
 </div>
 
-<%= form_for(@affiliate_promo_number, :html => {:multipart => true}) do |f|%>
+<%= form_for(@affiliate_promo_number, :html => {:multipart => true})  do |f|%>
     <% if @affiliate_promo_number.errors.any? %>
-        <h2>Errors:</h2>
+        <section class="main--pos shadow"></section>
+        <h2 class="title--header">Errors:</h2>
         <ul>
           <%= @affiliate_promo_number.errors.full_messages.each do |message| %>
               <li> <%=  puts message.first %> </li>
           <% end %>
         </ul>
+        </section>
     <% end %>
     <section class="main--pos">
       <div class="title--header ">
@@ -19,8 +21,8 @@
       <div class="inner">
         <div class="tile">
           <p>
-            <%= f.label :task_description, 'Task Name' %> <br />
-            <%= f.text_field :task_description %>
+            <%= label_tag :task_description, 'Task Name' %> <br />
+            <%= text_field_tag :task_description %>
           </p>
           <p>
             <%= label_tag :api_token, 'API Token' %> <br />
