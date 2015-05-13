@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Affiliate Promo Numbers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Task description</th>
+      <th>Network</th>
+      <th>Input filename</th>
+      <th>Output filename</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @affiliate_promo_numbers.each do |affiliate_promo_number| %>
+      <tr>
+        <td><%= affiliate_promo_number.task_description %></td>
+        <td><%= affiliate_promo_number.network_id %></td>
+        <td><%= affiliate_promo_number.input_filename %></td>
+        <td><%= affiliate_promo_number.output_filename %></td>
+        <td><%= link_to 'Show', affiliate_promo_number %></td>
+        <td><%= link_to 'Edit', edit_affiliate_promo_number_path(affiliate_promo_number) %></td>
+        <td><%= link_to 'Destroy', affiliate_promo_number, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Affiliate promo number', new_affiliate_promo_number_path %>

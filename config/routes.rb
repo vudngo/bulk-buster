@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :affiliate_promo_numbers
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -20,6 +22,7 @@ Rails.application.routes.draw do
   resources :affiliate_campaign_bulk_busters
   resources :bulk_trackers
   resources :advertiser_bulk_busters
+  resources :affiliate_promo_numbers
 
 
 

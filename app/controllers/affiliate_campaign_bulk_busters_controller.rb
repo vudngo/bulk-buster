@@ -28,7 +28,7 @@ class AffiliateCampaignBulkBustersController < ApplicationController
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @affiliate_campaign_bulk_buster.input_filename), 'wb') do |file|
         file.write(uploaded_io.read)
       end
-      @affiliate_campaign_bulk_buster.bust(params[:api_token])
+      @affiliate_campaign_bulk_buster.delay.bust(params[:api_token])
     else
       render "new"
     end

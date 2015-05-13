@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Task description:</strong>
+  <%= @affiliate_promo_number.task_description %>
+</p>
+
+<p>
+  <strong>Network:</strong>
+  <%= @affiliate_promo_number.network_id %>
+</p>
+
+<p>
+  <strong>Input filename:</strong>
+  <%= @affiliate_promo_number.input_filename %>
+</p>
+
+<p>
+  <strong>Output filename:</strong>
+  <%= @affiliate_promo_number.output_filename %>
+</p>
+
+<%= link_to 'Edit', edit_affiliate_promo_number_path(@affiliate_promo_number) %> |
+<%= link_to 'Back', affiliate_promo_numbers_path %>

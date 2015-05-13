@@ -2,9 +2,7 @@ require 'csv'
 require 'logger'
 require 'net/http'
 
-ROOT_DIR =
 
-MAX_RETRY_COUNT = 2
 OUTPUT_DIRECTORY = 'public/output'
 HTTP_CONTENT_TYPE = 'application/json'
 
@@ -72,32 +70,7 @@ class Buster < ActiveRecord::Base
 
 
 
-  def create_affiliate_campaigns(affiliate_campaigns_hash, api_token)
-    i = 0
-    affiliate_campaigns_hash.each do |affiliate_campaign|
-      #begin
-        affiliate_campaign_body = build_affiliate_campaign_body(affiliate_campaign)
-        puts affiliate_campaign
-        create_affiliate_campaign(affiliate_campaign[:advertiser_id_from_network], affiliate_campaign[:campaign_id_from_network], affiliate_campaign[:affiliate_id_from_network], affiliate_campaign_body, api_token)
-        promo_number_body = build_promo_number_body(affiliate_campaign)
-        create_affiliate_promo_number(affiliate_campaign[:advertiser_id_from_network], affiliate_campaign[:campaign_id_from_network], affiliate_campaign[:affiliate_id_from_network], promo_number_body, api_token)
-      # rescue
-      #   i += 1
-      #   if i > MAX_RETRY_COUNT
-      #     puts "retry limit has exceeded"
-      #     return false
-      #   end
-      #   puts "retry #{i}"
-      #   sleep 2
-      #   retry
-      # end
-    end
-  end
 
-  def create_affiliate_campaign(adv_id, campaign_id, affiliate_id, body, api_token)
-    url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + adv_id.to_s + "/advertiser_campaigns/" + campaign_id.to_s + "/affiliates/" + affiliate_id.to_s + "/affiliate_campaigns.json"
-    invoca_post_request(url, body, api_token)
-  end
 
   def create_advertiser_ring_pools(ring_pool_hash, api_token)
     i = 0
@@ -147,12 +120,6 @@ class Buster < ActiveRecord::Base
   end
 
 
-
-  def build_affiliate_campaign_body(affiliate_campaign)
-    affiliate_campaign_body = AFFILIATE_CAMPAIGN_ATTRIBUTES
-    affiliate_campaign_body[:affiliate_campaign_id_from_network] = affiliate_campaign[:campaign_id_from_network].to_s + affiliate_campaign[:affiliate_id_from_network].to_s
-    affiliate_campaign_body
-  end
 
 
 

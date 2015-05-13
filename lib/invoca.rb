@@ -50,13 +50,13 @@ class Invoca
 
     def create(name, approval_status = "Approved")
 
-      advertiser_attributes= {
+      advertiser_attributes = {
           :name => name,
           :approval_status => approval_status.to_s.capitalize,
           :default_creative_id_from_network => ""
       }
 
-      invoca_post_request(@url, advertiser_attributes)
+      @http.post_request(@url, advertiser_attributes)
 
     end
 
@@ -134,7 +134,7 @@ class Invoca
 
       while numbers_needed > 0
 
-        response = @http.post_request(URI.encode(url), body, api_token)
+        response = @http.post_request(url, body)
 
         if response
           details = JSON.parse(response.body)
@@ -166,11 +166,22 @@ class Invoca
     end
 
     # Go live in Invoca
-    def go_live( id = nil)
+    def go_live(id = nil)
       puts "Going live"
       id = @id_from_network unless id
       url = "https://invoca.net/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + id.to_s + "/go_live.json"
       @http.get_request(url)
+    end
+
+    # Join this campaign with an affiliate campaign
+    def join_with(affiliate_id_from_network, affiliate_campaign_id_from_network, status = "Approved")
+      url = "https://invoca.net/api/2014-11-01/" + @network_id + "/advertisers/" + @advertiser_id_from_network + "/advertiser_campaigns/" + @id_from_network + "/affiliates/" + affiliate_id_from_network.to_s + "/affiliate_campaigns.json"
+      body = {
+          'status' => status,
+          'affiliate_campaign_id_from_network' => affiliate_campaign_id_from_network.to_s
+      }
+
+      @http.post_request(url, body)
     end
 
   end # End of AdvertiserCampaign
@@ -181,19 +192,56 @@ class Invoca
   # ------------------------- #
 
 
-  class AffiliateCampaign
+  class AffiliateCampaign < AdvertiserCampaign
 
     # Init
-    attr_accessor :network_id, :affiliate_id_from_network, :id_from_network, :api_key
+    attr_accessor :network_id, :id_from_network, :api_key
 
 
-    def initalize(network_id, affiliate_id_from_network, id_from_network, api_key)
+    def initialize(network_id, advertiser_id_from_network, advertiser_campaign_id_from_network, affiliate_id_from_network, id_from_network, api_key)
       @network_id = network_id
       @affiliate_id_from_network = affiliate_id_from_network
       @id_from_network = id_from_network
+      @advertiser_id_from_network = advertiser_id_from_network
+      @advertiser_campaign_id_from_network = advertiser_campaign_id_from_network
       @api_key = api_key
 
       @http = HttpRequest.new(@api_key)
+    end
+
+    def create( status = "Approved")
+      url = "https://invoca.net/api/2014-11-01/" + @network_id + "/advertisers/" + @advertiser_id_from_network + "/advertiser_campaigns/" + @advertiser_campaign_id_from_network + "/affiliates/" + @affiliate_id_from_network.to_s + "/affiliate_campaigns.json"
+      body = {
+          'status' => status,
+          'affiliate_campaign_id_from_network' => @id_from_network.to_s
+      }
+
+      @http.post_request(url, body)
+    end
+
+    def pull_promo_numbers(quantity, media_type = "Online: Display", description = "Created on " + Time.now.strftime("%m/%d/%Y %H:%M"))
+      numbers_needed = quantity.to_i || 1
+      numbers_pulled = ""
+
+      url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @advertiser_campaign_id_from_network.to_s + "/affiliates/" + @id_from_network + "promo_numbers.json"
+      body = {
+          :description => description,
+          :media_type  => media_type
+      }
+
+      while numbers_needed > 0
+
+        response = @http.post_request(url, body)
+
+        if response
+          details = JSON.parse(response.body)
+          numbers_pulled += ( numbers_needed == quantity ) ? details['promo_number'] : "|#{details['promo_number']}"
+        end
+
+        numbers_needed -= 1
+      end
+
+      return numbers_pulled
     end
 
   end

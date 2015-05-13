@@ -1,0 +1,56 @@
+<div class="main--pos">
+  <h1>Bust out some Affiliate Promo Numbers</h1>
+</div>
+
+<%= form_for(@affiliate_promo_number, :html => {:multipart => true}) do |f|%>
+    <% if @affiliate_promo_number.errors.any? %>
+        <h2>Errors:</h2>
+        <ul>
+          <%= @affiliate_promo_number.errors.full_messages.each do |message| %>
+              <li> <%=  puts message.first %> </li>
+          <% end %>
+        </ul>
+    <% end %>
+    <section class="main--pos">
+      <div class="title--header ">
+        Credentials
+      </div>
+
+      <div class="inner">
+        <div class="tile">
+          <p>
+            <%= f.label :task_description, 'Task Name' %> <br />
+            <%= f.text_field :task_description %>
+          </p>
+          <p>
+            <%= label_tag :api_token, 'API Token' %> <br />
+            <%= text_field_tag :api_token %>
+          </p>
+          <p>
+            <%= f.label :network_id, 'Network ID' %> <br />
+            <%= f.text_field :network_id %>
+          </p>
+          <br>
+        </div>
+      </div>
+    </section>
+
+    <section class="main--pos shadow">
+      <div class="title--header">
+        Finalize
+      </div>
+
+      <div class="inner">
+        <p>
+          <%= link_to "Download Input File Template" , root_path << 'input_files/affiliate_promo_number.csv'  %>
+          <br><br>
+          <%= label_tag :attachment, 'Input File' %> <br />
+          <%= file_field_tag :attachment %>
+        </p>
+        <p>
+          <%= f.submit "Bust!" %>
+        </p>
+      </div>
+
+    </section>
+<% end %>

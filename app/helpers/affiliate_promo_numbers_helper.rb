@@ -1,0 +1,2 @@
+module AffiliatePromoNumbersHelper
+end
