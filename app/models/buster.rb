@@ -52,52 +52,6 @@ class Buster < ActiveRecord::Base
 
   end
 
-
-
-
-
-  def create_advertiser_ring_pools(ring_pool_hash, api_token)
-    i = 0
-    ring_pool_hash.each do |ring_pool|
-      #begin
-         puts ring_pool
-         create_advertiser_ring_pool(ring_pool, api_token)
-      # rescue
-      #   i += 1
-      #   if i > MAX_RETRY_COUNT
-      #     puts "retry limit has exceeded"
-      #     return false
-      #   end
-      #   puts "retry #{i}"
-         sleep 0.5
-      #   retry
-      # end
-    end
-  end
-
-  def create_advertiser_ring_pool(ring_pool, api_token)
-    #puts "in create functions"
-    ring_pool_body = build_ring_pool_body(ring_pool)
-    #puts "RingPool Body:"
-    #puts ring_pool_body
-    url = NETWORK_DOMAIN + "/api/2014-01-01/" + self.network_id.to_s + "/advertisers/" + ring_pool[:advertiser_id_from_network].to_s + "/advertiser_campaigns/" + ring_pool[:advertiser_campaign_id_from_network].to_s + "/ring_pools/" + ring_pool[:ringpool_id_from_network].to_s + ".json"
-    #puts "URL: #{url}"
-    invoca_post_request(url, ring_pool_body, api_token)
-  end
-
-  def build_ring_pool_body(ring_pool)
-    ring_pool_body = ring_pool.clone
-    ring_pool_body.delete(:advertiser_id_from_network)
-    ring_pool_body.delete(:advertiser_campaign_id_from_network)
-    ring_pool_body.delete(:ringpool_id_from_network)
-    return ring_pool_body
-  end
-
-
-
-
-
-
   def update_advertiser_promo_number(promo_number, api_token)
     promo_number_body = build_promo_number_body(promo_number)
     puts "Promo Number Body:"

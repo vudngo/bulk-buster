@@ -28,7 +28,7 @@ class AdvertiserRingPoolBulkBustersController < ApplicationController
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @advertiser_ring_pool_bulk_buster.input_filename), 'wb') do |file|
         file.write(uploaded_io.read)
       end
-      @advertiser_ring_pool_bulk_buster.bust(params[:api_token])
+      @advertiser_ring_pool_bulk_buster.delay.bust(params[:api_token])
     else
       render "new"
     end

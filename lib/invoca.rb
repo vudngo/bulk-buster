@@ -184,6 +184,18 @@ class Invoca
       @http.post_request(url, body)
     end
 
+    def create_ring_pool(ring_pool)
+      url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @id_from_network.to_s + "/ring_pools/" + ring_pool[:ringpool_id_from_network].to_s + ".json"
+
+      ring_pool.delete(:advertiser_id_from_network)
+      ring_pool.delete(:advertiser_campaign_id_from_network)
+      ring_pool.delete(:ringpool_id_from_network)
+
+      @http.post_request(url, ring_pool)
+
+
+    end
+
   end # End of AdvertiserCampaign
 
 
@@ -223,6 +235,7 @@ class Invoca
       numbers_pulled = ""
 
       url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @advertiser_campaign_id_from_network.to_s + "/affiliates/" + @affiliate_id_from_network + "/affiliate_campaigns/promo_numbers.json"
+
 
       body = {
           :description => description,

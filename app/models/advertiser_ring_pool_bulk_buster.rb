@@ -6,16 +6,47 @@ class AdvertiserRingPoolBulkBuster < Buster
 
 
   def bust(api_token)
-    file_hash = parse_input_file(self.input_filename)
-    duplicates = file_hash.select{|item| file_hash.count(item) > 1}.uniq
-
-    puts file_hash.count
-    puts file_hash.first
-    #puts build_ring_pool_body(file_hash.first)
-
-
-    #puts "Duplicate Count:" + file_hash.count.to_s
-    #puts "Duplicate Count:" + duplicates.count.to_s
-    create_advertiser_ring_pools(file_hash.uniq, api_token)
+    create_advertiser_ring_pools(api_token)
   end
+end
+
+
+def create_advertiser_ring_pools(api_key)
+  
+  files = Briefcase.new(self.task_description)
+  ring_pools = files.parse_input_file(self.input_filename)
+
+  tries_available = 3
+  wait_time = 1
+
+  ring_pools.each do |ring_pool|
+
+    try = 0
+    this = Invoca::AdvertiserCampaign.new(self.network_id, ring_pool[:advertiser_id_from_network], ring_pool[:advertiser_campaign_id_from_network], api_key )
+
+    begin
+      puts "\n\nCreating RingPool named: #{ring_pool[:name]}"
+      response = this.create_ring_pool(ring_pool)
+
+      ring_pool[:status] = (response.code.to_s == '200' || response.code.to_s == '201') ? "success" : JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
+
+    rescue => e
+      try += 1
+      if try > tries_available
+        puts "Skipping this RingPool."
+        ring_pool[:status] = e.to_s
+        files.log(ring_pool)
+        next
+      end
+      puts e.inspect
+      puts "Retry #{try} out of #{tries_available}"
+      sleep wait_time
+      retry
+    end
+
+    files.log(ring_pool)
+  end
+
+  files.save
+
 end

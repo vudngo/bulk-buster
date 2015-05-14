@@ -31,6 +31,18 @@ header {
     position: fixed;
 }
 
+.page-header {
+    float: right;
+    color: #000;
+    font-size: 20px;
+    display: inline-block;
+    top: -31px;
+    position: relative;
+    margin-right: 15px;
+    cursor: default;
+}
+
+
 #content {
     margin-top: 80px;
 }
@@ -257,7 +269,7 @@ th, td {
 #menu > li > a  {
     color: #000;
     text-decoration: none;
-    transition: 500ms;
+    transition: 250ms;
     font-weight: lighter;
 }
 
