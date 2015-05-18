@@ -234,7 +234,7 @@ class Buster < ActiveRecord::Base
 
           if response.code.to_s == '200' || response.code.to_s == '201'
             campaign_inputs[:error] = "none"
-            campaign_go_live(campaign_inputs[:advertiser_id_from_network],campaign_inputs[:campaign_id_from_network], api_token)
+            campaign_go_live(campaign_inputs[:advertiser_id_from_network],campaign_inputs[:advertiser_campaign_id_from_network], api_token)
           else
             campaign_inputs[:error] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
           end
@@ -324,9 +324,9 @@ class Buster < ActiveRecord::Base
       # begin
         affiliate_campaign_body = build_affiliate_campaign_body(affiliate_campaign)
         puts affiliate_campaign
-        create_affiliate_campaign(affiliate_campaign[:advertiser_id_from_network], affiliate_campaign[:campaign_id_from_network], affiliate_campaign[:affiliate_id_from_network], affiliate_campaign_body, api_token)
+        create_affiliate_campaign(affiliate_campaign[:advertiser_id_from_network], affiliate_campaign[:advertiser_campaign_id_from_network], affiliate_campaign[:affiliate_id_from_network], affiliate_campaign_body, api_token)
         promo_number_body = build_promo_number_body(affiliate_campaign)
-        create_affiliate_promo_number(affiliate_campaign[:advertiser_id_from_network], affiliate_campaign[:campaign_id_from_network], affiliate_campaign[:affiliate_id_from_network], promo_number_body, api_token)
+        create_affiliate_promo_number(affiliate_campaign[:advertiser_id_from_network], affiliate_campaign[:advertiser_campaign_id_from_network], affiliate_campaign[:affiliate_id_from_network], promo_number_body, api_token)
       # rescue
       #   i += 1
       #   if i > MAX_RETRY_COUNT
@@ -490,7 +490,7 @@ class Buster < ActiveRecord::Base
 
   def build_affiliate_campaign_body(affiliate_campaign)
     affiliate_campaign_body = AFFILIATE_CAMPAIGN_ATTRIBUTES
-    affiliate_campaign_body[:affiliate_campaign_id_from_network] = affiliate_campaign[:campaign_id_from_network].to_s + affiliate_campaign[:affiliate_id_from_network].to_s
+    affiliate_campaign_body[:affiliate_campaign_id_from_network] = affiliate_campaign[:advertiser_campaign_id_from_network].to_s + affiliate_campaign[:affiliate_id_from_network].to_s
     affiliate_campaign_body
   end
 
