@@ -22,5 +22,5 @@
 /public/output/*
 
 
-# Ignore workspace.xml.
-.idea/workspace.xml
+# Ignore the entire damned .idea/ directory
+.idea/
