@@ -4,8 +4,13 @@ require 'net/ftp'
 require 'json'
 require 'csv'
 require 'uri'
+require 'open-uri'
+
 
 # The Invoca Class contains subclasses for each object
+
+DOMAIN = "https://invoca.net"
+
 class Invoca
 
   # -------------- #
@@ -39,7 +44,7 @@ class Invoca
       @network_id = network_id
       @advertiser_id_from_network = advertiser_id_from_network
       @api_key = api_key
-      @url = "https://invoca.net/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + ".json"
+      @url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + ".json"
       @http = HttpRequest.new(@api_key)
     end
 
@@ -108,14 +113,14 @@ class Invoca
 
     # Get this campaign's full body
     def get
-      url = "https://invoca.net/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @id_from_network.to_s + ".json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@id_from_network.to_s) + ".json"
       response = @http.get_request(url)
       JSON.parse(response.body, :symbolize_names => true) if response
     end
 
     # Create this campaign in Invoca
     def create(body)
-      url = "https://invoca.net/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @id_from_network.to_s + ".json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@id_from_network.to_s) + ".json"
       @http.post_request(url, body)
     end
 
@@ -125,7 +130,7 @@ class Invoca
       numbers_needed = quantity.to_i || 1
       numbers_pulled = ""
 
-      url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @id_from_network.to_s + "/promo_numbers.json"
+      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @id_from_network.to_s + "/promo_numbers.json"
 
       body = {
           :description => description,
@@ -169,13 +174,13 @@ class Invoca
     def go_live(id = nil)
       puts "Going live"
       id = @id_from_network unless id
-      url = "https://invoca.net/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + id.to_s + "/go_live.json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(id.to_s) + "/go_live.json"
       @http.get_request(url)
     end
 
     # Join this campaign with an affiliate campaign
     def join_with(affiliate_id_from_network, affiliate_campaign_id_from_network, status = "Approved")
-      url = "https://invoca.net/api/2014-11-01/" + @network_id + "/advertisers/" + @advertiser_id_from_network + "/advertiser_campaigns/" + @id_from_network + "/affiliates/" + affiliate_id_from_network.to_s + "/affiliate_campaigns.json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id + "/advertisers/" + URI::encode(@advertiser_id_from_network) + "/advertiser_campaigns/" + URI::encode(@id_from_network) + "/affiliates/" + URI::encode(affiliate_id_from_network.to_s) + "/affiliate_campaigns.json"
       body = {
           'status' => status,
           'affiliate_campaign_id_from_network' => affiliate_campaign_id_from_network.to_s
@@ -185,7 +190,7 @@ class Invoca
     end
 
     def create_ring_pool(ring_pool)
-      url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @id_from_network.to_s + "/ring_pools/" + ring_pool[:ringpool_id_from_network].to_s + ".json"
+      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@id_from_network.to_s) + "/ring_pools/" + URI::encode(ring_pool[:ringpool_id_from_network].to_s) + ".json"
 
       ring_pool.delete(:advertiser_id_from_network)
       ring_pool.delete(:advertiser_campaign_id_from_network)
@@ -221,7 +226,7 @@ class Invoca
     end
 
     def create( status = "Approved")
-      url = "https://invoca.net/api/2014-11-01/" + @network_id + "/advertisers/" + @advertiser_id_from_network + "/advertiser_campaigns/" + @advertiser_campaign_id_from_network + "/affiliates/" + @affiliate_id_from_network.to_s + "/affiliate_campaigns.json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id + "/advertisers/" + URI::encode(@advertiser_id_from_network) + "/advertiser_campaigns/" + URI::encode(@advertiser_campaign_id_from_network) + "/affiliates/" + URI::encode(@affiliate_id_from_network.to_s) + "/affiliate_campaigns.json"
       body = {
           'status' => status,
           'affiliate_campaign_id_from_network' => @id_from_network.to_s
@@ -234,7 +239,7 @@ class Invoca
       numbers_needed = quantity.to_i || 1
       numbers_pulled = ""
 
-      url = "https://invoca.net/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @advertiser_campaign_id_from_network.to_s + "/affiliates/" + @affiliate_id_from_network + "/affiliate_campaigns/promo_numbers.json"
+      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@advertiser_campaign_id_from_network.to_s) + "/affiliates/" + URI::encode(@affiliate_id_from_network) + "/affiliate_campaigns/promo_numbers.json"
 
 
       body = {
