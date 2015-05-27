@@ -31,23 +31,40 @@ class CampaignBulkBuster < Buster
 
     campaign_hash.each do |campaign|
 
+      # Fail early if possible
+      if campaign[:name].nil?
+        puts "\n----\nCampaign name can't be blank.\nSkipping this campaign.\n----\n\n"
+        campaign[:status] = "{:name=>[\"can't be blank\"]}"
+        files.log(campaign)
+        next
+      end
+
       try = 0
 
-      puts "Cloning into: #{campaign[:name].to_s}"
+      puts "\n **"
+      puts " * Cloning into: #{campaign[:name].to_s}"
+      puts " **"
 
       begin
         this = Invoca::AdvertiserCampaign.new(self.network_id.to_s,campaign[:advertiser_id_from_network], campaign[:advertiser_campaign_id_from_network], api_token)
         new_campaign = campaign_body
 
+        # Static updates
         new_campaign[:name] = campaign[:name]
+        new_campaign[:url] = campaign[:url]
+
+        # Dynamically update all destination numbers
         new_campaign[:ivr_tree] = replace_destination_numbers(new_campaign,campaign)
 
+        puts "Creating campaign now."
+
+        # Attempt to create campaign and capture response
         response = this.create(new_campaign)
 
         if response.code.to_s == '200' || response.code.to_s == '201'
           campaign[:status] = "success"
+          campaign[:numbers_pulled] = this.pull_promo_numbers(campaign[:quantity]) if campaign[:quantity]
 
-          this.pull_promo_numbers(campaign[:quantity]) if campaign[:quantity]
           this.go_live
         else
           campaign[:status] = JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
@@ -56,7 +73,7 @@ class CampaignBulkBuster < Buster
       rescue => error
         if try >= tries_available
           puts "Skipping this campaign"
-          campaign[:status] = "unspecified error"
+          campaign[:status] = error.to_s
           files.log(campaign)
           next
         end

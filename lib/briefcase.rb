@@ -5,10 +5,10 @@ class Briefcase
 
   attr_accessor :start_time, :total_time, :filename
 
-  def initialize(description)
+  def initialize(description, type="csv")
     @start_time = Time.now
     @current_time = Time.now
-    @filename = "#{description}_output"
+    @filename = "#{description}_output" + ".#{type}"
     @logfile = []
     @total_busted = 0
     @root_dir = Rails.root.to_s
@@ -34,7 +34,7 @@ class Briefcase
     @total_busted += 1
 
     @current_time = Time.now
-    puts "Campaign completed in: #{this_time.to_s}"
+    puts "Campaign completed in: #{this_time.to_s}\n"
 
   end
 

@@ -22,6 +22,10 @@
         <%= label_tag :api_token, 'API Token' %> <br />
         <%= text_field_tag :api_token %>
         <br>
+
+        <%= link_to "Download Input File Template" , root_path << 'input_files/affiliate_campaigns_bulk.csv'  %>
+        <br><br>
+
         <%= label_tag :attachment, 'Input File' %> <br />
         <%= file_field_tag :attachment %>
         <br>

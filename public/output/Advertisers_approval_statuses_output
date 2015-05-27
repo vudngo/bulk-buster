@@ -1,0 +1,4 @@
+advertiser_name,advertiser_id_from_network,approval_status,status
+BB Refactor QA,refactor_advertiser,Suspended,success
+2BB Refactor QA,2nd_refactor_advertiser,Declined,success
+Refactor Applied,refactor_applied,Applied,success

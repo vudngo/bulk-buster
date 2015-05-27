@@ -40,6 +40,8 @@
       <div class="inner">
         <div class="tile">
           <p>
+            <%= link_to "Download Input File Template" , root_path << 'input_files/advertisers_template.csv'  %>
+            <br><br>
             <%= f.label :task_description, 'Task Description' %> <br />
             <%= f.text_area :task_description %>
           </p>

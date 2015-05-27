@@ -59,6 +59,8 @@
 
           <div class="inner">
             <div class="indent">
+              <%= link_to "Download Input File Template" , root_path << 'input_files/advertiser_campaigns_template.csv'  %>
+              <br><br>
             <span class="campaign-tile">
               <%= label_tag :attachment, 'Input File' %> <br />
               <%= file_field_tag :attachment %>

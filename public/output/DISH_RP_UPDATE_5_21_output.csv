@@ -1,0 +1,17 @@
+name,pool_type,destination_type,lifetime_seconds,max_pool_size,param1,param2,param3,param4,param5,param6,param7,param8,param9,param10,status
+Search_Bing_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Bing_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Bing_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Bing_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Desktop,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Bing_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Bing_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Bing_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Bing_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success
+Search_Google_Mobile,Custom,Advertiser,600,67,adometryId,kcid,utm_source,utm_medium,utm_term,utm_campaign,gclid,WTid,WTss,,success

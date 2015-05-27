@@ -44,7 +44,7 @@ class Invoca
       @network_id = network_id
       @advertiser_id_from_network = advertiser_id_from_network
       @api_key = api_key
-      @url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + ".json"
+      @url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + ".json"
       @http = HttpRequest.new(@api_key)
     end
 
@@ -113,14 +113,14 @@ class Invoca
 
     # Get this campaign's full body
     def get
-      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@id_from_network.to_s) + ".json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + ".json"
       response = @http.get_request(url)
       JSON.parse(response.body, :symbolize_names => true) if response
     end
 
     # Create this campaign in Invoca
     def create(body)
-      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@id_from_network.to_s) + ".json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" +URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + ".json"
       @http.post_request(url, body)
     end
 
@@ -130,7 +130,7 @@ class Invoca
       numbers_needed = quantity.to_i || 1
       numbers_pulled = ""
 
-      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + @advertiser_id_from_network.to_s + "/advertiser_campaigns/" + @id_from_network.to_s + "/promo_numbers.json"
+      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" +URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/promo_numbers.json"
 
       body = {
           :description => description,
@@ -138,7 +138,7 @@ class Invoca
       }
 
       while numbers_needed > 0
-
+        puts "Attempting to pull a promo number"
         response = @http.post_request(url, body)
 
         if response
@@ -174,13 +174,13 @@ class Invoca
     def go_live(id = nil)
       puts "Going live"
       id = @id_from_network unless id
-      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(id.to_s) + "/go_live.json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(id, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/go_live.json"
       @http.get_request(url)
     end
 
     # Join this campaign with an affiliate campaign
     def join_with(affiliate_id_from_network, affiliate_campaign_id_from_network, status = "Approved")
-      url = DOMAIN + "/api/2014-11-01/" + @network_id + "/advertisers/" + URI::encode(@advertiser_id_from_network) + "/advertiser_campaigns/" + URI::encode(@id_from_network) + "/affiliates/" + URI::encode(affiliate_id_from_network.to_s) + "/affiliate_campaigns.json"
+      url = DOMAIN + "/api/2014-11-01/" + @network_id + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@aid_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/affiliates/" + URI.escape(@affiliate_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/affiliate_campaigns.json"
       body = {
           'status' => status,
           'affiliate_campaign_id_from_network' => affiliate_campaign_id_from_network.to_s
@@ -190,7 +190,7 @@ class Invoca
     end
 
     def create_ring_pool(ring_pool)
-      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@id_from_network.to_s) + "/ring_pools/" + URI::encode(ring_pool[:ringpool_id_from_network].to_s) + ".json"
+      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/ring_pools/" + URI.escape(ring_pool[ringpool_id_from_network].to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))+ ".json"
 
       ring_pool.delete(:advertiser_id_from_network)
       ring_pool.delete(:advertiser_campaign_id_from_network)
@@ -225,11 +225,11 @@ class Invoca
       @http = HttpRequest.new(@api_key)
     end
 
-    def create( status = "Approved")
+    def create( affiliate_id_from_network, status = "Applied")
       url = DOMAIN + "/api/2014-11-01/" + @network_id + "/advertisers/" + URI::encode(@advertiser_id_from_network) + "/advertiser_campaigns/" + URI::encode(@advertiser_campaign_id_from_network) + "/affiliates/" + URI::encode(@affiliate_id_from_network.to_s) + "/affiliate_campaigns.json"
       body = {
           'status' => status,
-          'affiliate_campaign_id_from_network' => @id_from_network.to_s
+          'affiliate_campaign_id_from_network' => affiliate_id_from_network.to_s
       }
 
       @http.post_request(url, body)

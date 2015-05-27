@@ -12,6 +12,15 @@ class Buster < ActiveRecord::Base
   self.abstract_class = true
 
   def replace_destination_numbers(campaign_body, campaign_inputs)
+    puts "\n\n"
+    print "Updating destinations: "
+
+    # If there is only a direct transfer, update that single number and then leave
+    if campaign_inputs[:destination_phone_number]
+      print "Only found a single number.\n"
+      campaign_body[:ivr_tree][:root][:destination_phone_number] = campaign_inputs[:destination_phone_number]
+      return campaign_body[:ivr_tree]
+    end
 
 
     def build_mapping(inputs)
@@ -31,9 +40,6 @@ class Buster < ActiveRecord::Base
 
     ivr = campaign_body[:ivr_tree]
     ivr_string = ivr.to_s
-
-    puts "\n\n"
-    print "Updating destinations:"
 
     mapping = build_mapping(campaign_inputs)
 

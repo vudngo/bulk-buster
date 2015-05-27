@@ -28,12 +28,19 @@ def create_advertisers(api_token)
   advertisers_hash.each do |advertiser|
 
     try = 0
+
+    if advertiser[:advertiser_id_from_network].nil?
+      advertiser[:status] = "Advertiser ID From Network cannot be blank"
+      files.log(advertiser)
+      next
+    end
+
     this = Invoca::Advertiser.new(self.network_id.to_s, advertiser[:advertiser_id_from_network], api_token)
 
     begin
       puts "\n\nCreating advertiser with ID: " + advertiser[:advertiser_id_from_network]
 
-      response = this.create(advertiser[:advertiser_name])
+      response = advertiser[:approval_status] ? this.create(advertiser[:advertiser_name], advertiser[:approval_status]) : this.create(advertiser[:advertiser_name])
 
       if response.code.to_s == '200' || response.code.to_s == '201'
         advertiser[:status] = "success"
