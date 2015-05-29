@@ -1,6 +1,0 @@
-advertiser_id_from_network,advertiser_campaign_id_from_network,affiliate_id_from_network,affiliate_campaign_id_from_network,status
-,526_valid,1A,1,"{:class=>""RecordNotFound"", :invalid_data=>""Could not find advertiser with id_from_network 1A in network 871""}"
-12,,2A,2,"{:class=>""RecordNotFound"", :invalid_data=>""Could not find advertiser with id_from_network 2A in network 871""}"
-12,526_valid,3A,_,"{:class=>""RecordNotFound"", :invalid_data=>""Could not find advertiser with id_from_network 3A in network 871""}"
-12,526_valid,4A,2,"{:class=>""RecordNotFound"", :invalid_data=>""Could not find advertiser with id_from_network 4A in network 871""}"
-12,526_valid,1A,1,"{:class=>""RecordNotFound"", :invalid_data=>""Could not find advertiser with id_from_network 1A in network 871""}"

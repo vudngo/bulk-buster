@@ -127,7 +127,7 @@ class Invoca
     # Pull however many numbers are requested
     def pull_promo_numbers(quantity, media_type = "Online: Display", description = "Created on " + Time.now.strftime("%m/%d/%Y %H:%M"))
 
-      numbers_needed = quantity.to_i || 1
+      numbers_needed = ( quantity.nil? ) ? 1 : quantity.to_i
       numbers_pulled = ""
 
       url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" +URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/promo_numbers.json"
@@ -141,13 +141,16 @@ class Invoca
         puts "Attempting to pull a promo number"
         response = @http.post_request(url, body)
 
-        if response
+        if response.code.to_s == '200' || response.code.to_s == '201'
           details = JSON.parse(response.body)
           if numbers_needed == quantity.to_i
             numbers_pulled += details['promo_number']
           else
             numbers_pulled += "|" + details['promo_number']
           end
+        else
+          puts "\n\nmedia type: " + media_type.to_s + "\n\n"
+          numbers_pulled += JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
         end
 
         numbers_needed -= 1
@@ -155,6 +158,7 @@ class Invoca
 
       return numbers_pulled
     end
+
 
     # Return "postable" body with only accepted attributes
     def clone(name = "Unnamed")
@@ -190,14 +194,20 @@ class Invoca
     end
 
     def create_ring_pool(ring_pool)
-      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/ring_pools/" + URI.escape(ring_pool[ringpool_id_from_network].to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))+ ".json"
+      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/ring_pools/" + URI.escape(ring_pool[:ringpool_id_from_network].to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))+ ".json"
 
-      ring_pool.delete(:advertiser_id_from_network)
-      ring_pool.delete(:advertiser_campaign_id_from_network)
-      ring_pool.delete(:ringpool_id_from_network)
+      body = ring_pool.clone
+      body.delete(:advertiser_id_from_network)
+      body.delete(:advertiser_campaign_id_from_network)
+      body.delete(:ringpool_id_from_network)
 
-      @http.post_request(url, ring_pool)
+      @http.post_request(url, body)
 
+    end
+
+    def get_ring_pool(id)
+      url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/ring_pools/" + URI.escape(id.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))+ ".json"
+      @http.get_request(url)
 
     end
 
@@ -236,11 +246,11 @@ class Invoca
     end
 
     def pull_promo_numbers(quantity, media_type = "Online: Display", description = "Created on " + Time.now.strftime("%m/%d/%Y %H:%M"))
-      numbers_needed = quantity.to_i || 1
+
+      numbers_needed = ( quantity.nil? ) ? 1 : quantity.to_i
       numbers_pulled = ""
 
       url = DOMAIN + "/api/2014-01-01/" + @network_id.to_s + "/advertisers/" + URI::encode(@advertiser_id_from_network.to_s) + "/advertiser_campaigns/" + URI::encode(@advertiser_campaign_id_from_network.to_s) + "/affiliates/" + URI::encode(@affiliate_id_from_network) + "/affiliate_campaigns/promo_numbers.json"
-
 
       body = {
           :description => description,
@@ -248,12 +258,19 @@ class Invoca
       }
 
       while numbers_needed > 0
-
+        puts "Attempting to pull a promo number"
         response = @http.post_request(url, body)
 
-        if response
+        if response.code.to_s == '200' || response.code.to_s == '201'
           details = JSON.parse(response.body)
-          numbers_pulled += ( numbers_needed == quantity ) ? details['promo_number'] : "|#{details['promo_number']}"
+          if numbers_needed == quantity.to_i
+            numbers_pulled += details['promo_number']
+          else
+            numbers_pulled += "|" + details['promo_number']
+          end
+        else
+          puts "\n\nmedia type: " + media_type.to_s + "\n\n"
+          numbers_pulled += JSON.parse(response.body, :symbolize_names => true)[:errors].to_s
         end
 
         numbers_needed -= 1

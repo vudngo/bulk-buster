@@ -1,5 +1,0 @@
-advertiser_name,advertiser_id_from_network,approval_status,status
-BB Bad ID,>&^*,,success
-BB Invalid Status,invalid_status,invalid,"{:approval_status=>[""is not included in the list""]}"
-Missing ID,,,Advertiser ID From Network cannot be blank
-Really Bad Id,if{ space }}|\],,bad URI(is not URI?): https://invoca.net/api/2014-11-01/871/advertisers/if%7B%20space%20%7D%7D%7C%5C].json

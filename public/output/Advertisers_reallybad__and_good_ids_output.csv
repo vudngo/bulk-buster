@@ -1,6 +1,0 @@
-advertiser_name,advertiser_id_from_network,approval_status,status
-BB Bad ID,>&^*,,success
-BB Invalid Status,invalid_status,invalid,"{:approval_status=>[""is not included in the list""]}"
-Missing ID,,,Advertiser ID From Network cannot be blank
-Really Bad Id,if{ space }}|\],,success
-BB Valid,refactor_valid,,success

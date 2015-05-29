@@ -1,6 +1,0 @@
-advertiser_id_from_network,advertiser_campaign_id_from_network,affiliate_id_from_network,affiliate_campaign_id_from_network,status
-,526_valid,1A,1,value can't be blank!
-12,,2A,2,value can't be blank!
-12,526_valid,3A,_,"{:status=>[""cannot transition from 'Approved'. Possible transitions: 'Suspended'.""]}"
-12,526_valid,4A,2,"{:status=>[""cannot transition from 'Approved'. Possible transitions: 'Suspended'.""]}"
-12,526_valid,1A,1,"{:status=>[""cannot transition from 'Approved'. Possible transitions: 'Suspended'.""]}"

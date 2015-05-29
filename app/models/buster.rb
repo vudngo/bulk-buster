@@ -82,4 +82,32 @@ class Buster < ActiveRecord::Base
     return result_hash
   end
 
+
+  def find_blanks(hash)
+    the_keys = hash.keys
+    blanks = []
+
+    the_keys.each do |k|
+      # ringPool params are allowed to be blank
+      if hash[k].nil? && (!k.to_s.include? "param")
+        blanks << k.to_s
+      end
+    end
+
+    return blanks unless blanks.empty?
+    false
+  end
+
+  def clear
+    puts `clear`
+  end
+
+  def pretty(hash)
+    puts JSON.pretty_generate(hash)
+  end
+
+
 end
+
+
+

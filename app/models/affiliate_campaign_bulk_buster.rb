@@ -25,8 +25,10 @@ class AffiliateCampaignBulkBuster < Buster
     affiliate_campaigns_hash.each do |campaign|
 
       # Fail early
-      if campaign[:advertiser_id_from_network].nil? || campaign[:advertiser_campaign_id_from_network].nil? || campaign[:affiliate_id_from_network].nil? || campaign[:affiliate_campaign_id_from_network].nil?
-        campaign[:status] = "value can't be blank!"
+      if blanks = find_blanks(campaign)
+        puts "\n\n" + blanks.to_s + " can't be empty"
+
+        campaign[:status] = blanks.to_s + " can't be empty"
         files.log(campaign)
         next
       end

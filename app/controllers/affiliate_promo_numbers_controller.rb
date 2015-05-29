@@ -19,7 +19,7 @@ class AffiliatePromoNumbersController < ApplicationController
       if params[:attachment]
         uploaded_io = params[:attachment]
         @affiliate_promo_number.input_filename =  uploaded_io.original_filename
-        @affiliate_promo_number.task_description = params[:task_description].gsub!(' ','-')
+        @affiliate_promo_number.task_description = params[:task_description]
       end
 
 

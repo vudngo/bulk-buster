@@ -21,6 +21,14 @@ def create_advertiser_ring_pools(api_key)
 
   ring_pools.each do |ring_pool|
 
+    if blanks = find_blanks(ring_pool)
+      puts "\n\n" + blanks.to_s + " can't be empty"
+
+      ring_pool[:status] = blanks.to_s + " can't be empty"
+      files.log(ring_pool)
+      next
+    end
+
     try = 0
     this = Invoca::AdvertiserCampaign.new(self.network_id, ring_pool[:advertiser_id_from_network], ring_pool[:advertiser_campaign_id_from_network], api_key )
 

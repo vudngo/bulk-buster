@@ -1,0 +1,1 @@
+advertiser_id_from_network,advertiser_campaign_id_from_network,ringpool_id_from_network,name,pool_type,destination_type,lifetime_seconds,max_pool_size,param1,param2,param31,123,1,RingPool 1,Custom,API,300,4,cid,,2,456,2,Test Pool 1,CustomWithSearchTracking,Advertiser,600,8,GCLID,utm_keyword,utm_campaign2,789,3,Search Pool,Search,Affiliate,1200,9,GCLID,utm_keyword,utm_campaign

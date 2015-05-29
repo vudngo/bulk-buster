@@ -1,2 +1,0 @@
- name,pool_type,destination_type,lifetime_seconds,max_pool_size,param1,param2,param3,param4,param5,param6,param7,param8,param9,param10,status
-Search_Bing_Desktop,Custom,Advertiser,600,83,adometryId,kcid,SearchMediumCampaign,WTmc_id,TermContent,matchtype,gclid,WTid,uuid,cid,success
