@@ -79,7 +79,7 @@ class Invoca
   # -------------------------- #
 
 
-  class AdvertiserCampaign < Advertiser
+  class AdvertiserCampaign
 
     # Init instance variables
     attr_accessor :network_id, :advertiser_id_from_network, :id_from_network, :api_key
@@ -127,10 +127,11 @@ class Invoca
     # Pull however many numbers are requested
     def pull_promo_numbers(quantity, media_type = "Online: Display", description = "Created on " + Time.now.strftime("%m/%d/%Y %H:%M"))
 
+      quantity = 1 if quantity.nil?
       numbers_needed = ( quantity.nil? ) ? 1 : quantity.to_i
       numbers_pulled = ""
 
-      url = DOMAIN + "/api/2015-05-01/" + @network_id.to_s + "/advertisers/" +URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/promo_numbers.json"
+      url = DOMAIN + "/api/2015-05-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/promo_numbers.json"
 
       body = {
           :description => description,
@@ -195,7 +196,7 @@ class Invoca
 
     def create_ring_pool(ring_pool)
 
-      url = DOMAIN + "/api/2015-05-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/ring_pools/" + URI.escape(ring_pool[ringpool_id_from_network].to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))+ ".json"
+      url = DOMAIN + "/api/2015-05-01/" + @network_id.to_s + "/advertisers/" + URI.escape(@advertiser_id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/advertiser_campaigns/" + URI.escape(@id_from_network.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]")) + "/ring_pools/" + URI.escape(ring_pool[:ringpool_id_from_network].to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))+ ".json"
 
       body = ring_pool.clone
       body.delete(:advertiser_id_from_network)
@@ -220,7 +221,7 @@ class Invoca
   # ------------------------- #
 
 
-  class AffiliateCampaign < AdvertiserCampaign
+  class AffiliateCampaign
 
     # Init
     attr_accessor :network_id, :id_from_network, :api_key
