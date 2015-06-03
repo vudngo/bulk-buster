@@ -18,7 +18,7 @@ def create_advertisers(api_token)
   puts "Advertiser is busting!"
 
   # Setup logging to write output file
-  files = Briefcase.new(self.task_description)
+  files = Briefcase.new("#{self.class.name}_#{self.id}_#{self.description}")
 
   advertisers_hash = files.parse_input_file(self.input_filename)
 

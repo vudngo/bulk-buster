@@ -22,7 +22,7 @@ class AdvertiserRingPoolBulkBustersController < ApplicationController
 
     if @advertiser_ring_pool_bulk_buster.save
       @advertiser_ring_pool_bulk_buster.reload
-      @advertiser_ring_pool_bulk_buster.input_filename = "advertiser_bulk_#{@advertiser_ring_pool_bulk_buster.id}.csv"
+      @advertiser_ring_pool_bulk_buster.input_filename = "#{@advertiser_ring_pool_bulk_buster.class.name}_#{@advertiser_ring_pool_bulk_buster.id}_#{@advertiser_ring_pool_bulk_buster.description}.csv"
       @advertiser_ring_pool_bulk_buster.save
       redirect_to advertiser_ring_pool_bulk_busters_path #, :notice => "Your advertiser bulk has been created"
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @advertiser_ring_pool_bulk_buster.input_filename), 'wb') do |file|

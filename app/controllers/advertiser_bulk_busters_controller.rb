@@ -6,9 +6,8 @@ class AdvertiserBulkBustersController < ApplicationController
 
   def show
     @advertiser_bulk_buster = AdvertiserBulkBuster.find(params[:id])
-
-    filename = "advertiser_bulk_output_#{@advertiser_bulk_buster.id}.csv"
-    output_hash = @advertiser_bulk_buster.parse_output_file(filename)
+    files = Briefcase.new("")
+    output_hash = files.parse_output_file(@advertiser_bulk_buster.output_filename)
     if output_hash.empty?
       @failure_count = 0
       @success_count = 0
@@ -36,7 +35,7 @@ class AdvertiserBulkBustersController < ApplicationController
     if @advertiser_bulk_buster.save
 
       @advertiser_bulk_buster.reload
-      @advertiser_bulk_buster.input_filename = "advertiser_bulk_#{@advertiser_bulk_buster.id}.csv"
+      @advertiser_bulk_buster.input_filename = "#{@advertiser_bulk_buster.class.name}_#{@advertiser_bulk_buster.id}_#{@advertiser_bulk_buster.description}.csv"
       @advertiser_bulk_buster.save
 
       redirect_to advertiser_bulk_busters_path #, :notice => "Your advertiser bulk has been created"

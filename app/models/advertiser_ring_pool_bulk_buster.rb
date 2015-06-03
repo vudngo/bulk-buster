@@ -12,8 +12,9 @@ end
 
 
 def create_advertiser_ring_pools(api_key)
-  
-  files = Briefcase.new(self.task_description)
+
+  files = Briefcase.new("#{self.class.name}_#{self.id}_#{self.description}")
+
   ring_pools = files.parse_input_file(self.input_filename)
 
   tries_available = 3

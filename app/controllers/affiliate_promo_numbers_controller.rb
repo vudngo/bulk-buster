@@ -27,7 +27,7 @@ class AffiliatePromoNumbersController < ApplicationController
 
 
         @affiliate_promo_number.reload
-        @affiliate_promo_number.input_filename = "#{@affiliate_promo_number.task_description}--affiliate_promo_numbers--#{@affiliate_promo_number.id}.csv"
+        @affiliate_promo_number.input_filename = "#{@affiliate_promo_number.class.name}_#{@affiliate_promo_number.id}_#{@affiliate_promo_number.description}.csv"
         @affiliate_promo_number.save
 
         redirect_to advertiser_ring_pool_bulk_busters_path #, :notice => "Your advertiser bulk has been created"

@@ -27,7 +27,7 @@ class AdvertiserPromoNumberBulkBustersController < ApplicationController
 
       description = @advertiser_promo_number_bulk_buster.task_description.gsub!(/[!@%&"]/,'-')
       @advertiser_promo_number_bulk_buster.reload
-      @advertiser_promo_number_bulk_buster.input_filename = "#{description}--bulk_promo_numbers--#{@advertiser_promo_number_bulk_buster.id}.csv"
+      @advertiser_promo_number_bulk_buster.input_filename = "#{@advertiser_promo_number_bulk_buster.class.name}_#{@advertiser_promo_number_bulk_buster.id}_#{@advertiser_promo_number_bulk_buster.description}.csv"
       @advertiser_promo_number_bulk_buster.save
 
       redirect_to advertiser_ring_pool_bulk_busters_path #, :notice => "Your advertiser bulk has been created"

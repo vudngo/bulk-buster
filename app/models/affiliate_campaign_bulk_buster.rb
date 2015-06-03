@@ -10,7 +10,7 @@ class AffiliateCampaignBulkBuster < Buster
   def create_affiliate_campaigns(api_token)
 
     # Set up Campaign Logger
-    files = Briefcase.new(self.input_filename)
+    files = Briefcase.new("#{self.class.name}_#{self.id}_#{self.description}")
 
     # Read input file as an array of hashes
     affiliate_campaigns_hash = files.parse_input_file(self.input_filename).uniq

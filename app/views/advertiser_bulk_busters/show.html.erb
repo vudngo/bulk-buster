@@ -8,8 +8,8 @@
       <div class="title--header">
         STATS FOR  <%= "#{@advertiser_bulk_buster.task_description}"%>
         <div style="font-size: 100%;">
-          <%= link_to "Input File", "/uploads/campaign_bulk_#{@advertiser_bulk_buster.id}.csv" %> |
-          <%= link_to "Results", "/output/campaign_bulk_output_#{@advertiser_bulk_buster.id}.csv" %>
+          <%= link_to "Input File", "/uploads/#{@advertiser_bulk_buster.input_filename}" %> |
+          <%= link_to "Results", "/output/#{@advertiser_bulk_buster.output_filename}" %>
         </div>
       </div>
       <div class="hulk_background">

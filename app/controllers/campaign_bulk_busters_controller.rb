@@ -29,7 +29,7 @@ class CampaignBulkBustersController < ApplicationController
 
     if @campaign_bulk_buster.save
       @campaign_bulk_buster.reload
-      @campaign_bulk_buster.input_filename = "campaign_bulk_#{@campaign_bulk_buster.id}.csv"
+      @campaign_bulk_buster.input_filename = "#{@campaign_bulk_buster.class.name}_#{@campaign_bulk_buster.id}_#{@campaign_bulk_buster.description}.csv"
       @campaign_bulk_buster.save
       redirect_to campaign_bulk_busters_path #, :notice => "Your campaign bulk has been created"
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @campaign_bulk_buster.input_filename), 'wb') do |file|

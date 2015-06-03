@@ -11,7 +11,7 @@ class AdvertiserPromoNumberBulkBuster < Buster
 
   def create_advertiser_promo_numbers(api_token)
     # Set up Campaign Logger
-    files = Briefcase.new(self.task_description)
+    files = Briefcase.new("#{self.class.name}_#{self.id}_#{self.description}")
     promo_numbers = files.parse_input_file(self.input_filename)
 
     promo_numbers.each do |promo_number|

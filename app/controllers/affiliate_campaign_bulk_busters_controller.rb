@@ -22,7 +22,7 @@ class AffiliateCampaignBulkBustersController < ApplicationController
 
     if @affiliate_campaign_bulk_buster.save
       @affiliate_campaign_bulk_buster.reload
-      @affiliate_campaign_bulk_buster.input_filename = "affiliate_campaign_bulk_#{@affiliate_campaign_bulk_buster.id}.csv"
+      @affiliate_campaign_bulk_buster.input_filename = "#{@affiliate_campaign_bulk_buster.class.name}_#{@affiliate_campaign_bulk_buster.id}_#{@affiliate_campaign_bulk_buster.description}.csv"
       @affiliate_campaign_bulk_buster.save
       redirect_to affiliate_campaign_bulk_busters_path #, :notice => "Your affiliate_campaign bulk has been created"
       File.open(Rails.root.join(UPLOAD_DIRECTORY, @affiliate_campaign_bulk_buster.input_filename), 'wb') do |file|

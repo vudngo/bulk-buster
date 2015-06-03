@@ -14,7 +14,7 @@ class CampaignBulkBuster < Buster
   def bust_by_cloning(api_token)
 
     # Set up Campaign Logger
-    files = Briefcase.new(self.task_description)
+    files = Briefcase.new("#{self.class.name}_#{self.id}_#{self.description}")
 
     # Read input file as an array of hashes
     campaign_hash = files.parse_input_file(self.input_filename).uniq
