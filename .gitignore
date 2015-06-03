@@ -19,3 +19,7 @@
 # Ignore the user files
 /public/uploads/*
 /public/output/*
+
+# Ignore RubyMine's .idea/
+.idea/workspace.xml
+.idea/*
