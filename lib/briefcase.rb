@@ -5,7 +5,7 @@ class Briefcase
 
   attr_accessor :start_time, :total_time, :filename
 
-  def initialize(description, type="csv")
+  def initialize(description="temp", type="csv")
     @start_time = Time.now
     @current_time = Time.now
     @filename = "#{description}_output" + ".#{type}"
